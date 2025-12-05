@@ -20,7 +20,8 @@ def send_photo(image_url: str, caption: str = ""):
     data = {
         "chat_id": CHAT_ID,
         "photo": image_url,
-        "caption": caption
+        "caption": caption,
+        "parse_mode": "Markdown"
     }
     resp = requests.post(url, data=data)
     return resp

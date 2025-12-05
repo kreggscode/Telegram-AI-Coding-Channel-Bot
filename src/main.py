@@ -28,9 +28,26 @@ def post_clean_code_tip():
     tg.send_text(text)
 
 
+def post_tech_news():
+    prompt = TEXT_TEMPLATES["tech_news"]
+    text = ai.generate_text(prompt)
+    tg.send_text(text)
+
+
 def post_image_plus_text():
-    text_prompt = TEXT_TEMPLATES["clean_code"]
-    img_prompt = IMAGE_TEMPLATES["coding_hero"]
+    """Post an image with code snippet - rotates between JS, Python, ML"""
+    import random
+    
+    # Rotate between different content types with matching images
+    choices = [
+        ("js_tip", "js_image"),
+        ("python_tip", "python_image"),
+        ("ml_tip", "ml_image"),
+    ]
+    text_key, img_key = random.choice(choices)
+    
+    text_prompt = TEXT_TEMPLATES[text_key]
+    img_prompt = IMAGE_TEMPLATES[img_key]
 
     caption = ai.generate_text(text_prompt)
     img_url = ai.image_url(img_prompt)
@@ -78,6 +95,8 @@ def main():
         post_ml_tip()
     elif post_type == "clean_code_text":
         post_clean_code_tip()
+    elif post_type == "tech_news_text":
+        post_tech_news()
     elif post_type == "image_plus_text":
         post_image_plus_text()
     elif post_type == "poll":

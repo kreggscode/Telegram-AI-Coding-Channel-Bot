@@ -31,10 +31,28 @@ def send_python_tip():
 
 @app.route("/send/image-post")
 def send_image_post():
-    caption = ai.generate_text(TEXT_TEMPLATES["clean_code"])
-    img_url = ai.image_url(IMAGE_TEMPLATES["coding_hero"])
+    """Rotates between JS, Python, ML images"""
+    import random
+    choices = [
+        ("js_tip", "js_image"),
+        ("python_tip", "python_image"),
+        ("ml_tip", "ml_image"),
+    ]
+    text_key, img_key = random.choice(choices)
+    
+    caption = ai.generate_text(TEXT_TEMPLATES[text_key])
+    img_url = ai.image_url(IMAGE_TEMPLATES[img_key])
+    
     tg.send_photo(img_url, caption)
-    flash("Image + caption sent!", "success")
+    flash(f"Image sent ({text_key})!", "success")
+    return redirect(url_for("index"))
+
+
+@app.route("/send/tech-news")
+def send_tech_news():
+    text = ai.generate_text(TEXT_TEMPLATES["tech_news"])
+    tg.send_text(text)
+    flash("Tech News sent!", "success")
     return redirect(url_for("index"))
 
 
