@@ -2,10 +2,11 @@ name: Telegram AI Auto Poster
 
 on:
   schedule:
-    # Every day at 03:00, 09:00, 15:00, 21:00 UTC
-    # (adjust to your taste)
-    - cron: "0 3,9,15,21 * * *"
-  workflow_dispatch:
+    # Optimized for IST (India Standard Time)
+    # Posts at: 8:00 AM, 1:00 PM, 6:00 PM, 10:00 PM IST
+    # Which is: 2:30 AM, 7:30 AM, 12:30 PM, 4:30 PM UTC
+    - cron: "30 2,7,12,16 * * *"
+  workflow_dispatch:  # Allows manual triggering from Actions tab
 
 jobs:
   run:
