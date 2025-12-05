@@ -1,6 +1,11 @@
 # Environment variables
 .env
 
+# Security audit reports (contain old tokens for documentation)
+SECURITY_AUDIT_REPORT.md
+URGENT_TOKEN_REVOCATION.md
+BEFORE_AFTER_COMPARISON.md
+
 # Python
 __pycache__/
 *.py[cod]

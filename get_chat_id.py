@@ -3,10 +3,23 @@ Quick script to get your Telegram Channel Chat ID
 Run this after posting a message in your channel
 """
 
+import os
 import requests
+from dotenv import load_dotenv
 
-# Your bot token
-BOT_TOKEN = "8255208641:AAHtbi2i80Ggx71f4wMwtvtlhBukhy9j_XQ"
+# Load environment variables from .env file
+load_dotenv()
+
+# Get bot token from environment variables
+BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+
+if not BOT_TOKEN:
+    print("❌ ERROR: BOT_TOKEN not found!")
+    print("\n📝 TO FIX THIS:")
+    print("1. Create a .env file in the project root")
+    print("2. Add your bot token: BOT_TOKEN=your_bot_token_here")
+    print("3. Never commit the .env file to git!")
+    exit(1)
 
 print("🔍 Fetching updates from Telegram...\n")
 
