@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card-grid">
+    <div class="card">
+        <h2>🐍 Python Tip</h2>
+        <p>AI-generated Python coding tip with example.</p>
+        <a href="{{ url_for('send_python_tip') }}" class="btn">Send to Channel</a>
+    </div>
+
+    <div class="card">
+        <h2>🖼️ Image + Text</h2>
+        <p>Clean-code tip with a generated coding illustration.</p>
+        <a href="{{ url_for('send_image_post') }}" class="btn">Send to Channel</a>
+    </div>
+
+    <div class="card">
+        <h2>📊 Poll</h2>
+        <p>Multiple-choice coding question for your audience.</p>
+        <a href="{{ url_for('send_poll') }}" class="btn">Send to Channel</a>
+    </div>
+
+    <div class="card">
+        <h2>🧵 Thread</h2>
+        <p>4-part explanation thread on a coding concept.</p>
+        <a href="{{ url_for('send_thread') }}" class="btn">Send to Channel</a>
+    </div>
+</div>
+{% endblock %}
