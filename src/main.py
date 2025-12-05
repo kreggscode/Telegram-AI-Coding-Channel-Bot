@@ -83,6 +83,13 @@ def post_thread():
         tg.send_thread(parts)
 
 
+def post_motivational_tip():
+    """Post motivational/career advice for developers"""
+    prompt = TEXT_TEMPLATES["motivational_tip"]
+    text = ai.generate_text(prompt)
+    tg.send_text(text)
+
+
 def main():
     post_type = sched.decide_post_type()
     print(f"Decided post type: {post_type}")
@@ -103,6 +110,8 @@ def main():
         post_poll()
     elif post_type == "thread":
         post_thread()
+    elif post_type == "motivational_tip":
+        post_motivational_tip()
     else:
         tg.send_text("No valid post type decided.")
 

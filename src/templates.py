@@ -81,6 +81,17 @@ TEXT_TEMPLATES = {
         "Create ONE multiple choice coding question. "
         "Format strictly as: Question? | Option A, Option B, Option C. "
         "Make it short and clear, suitable for a Telegram poll."
+    ),
+    "motivational_tip": (
+        "Write an inspiring developer career tip with this EXACT format:\\n\\n"
+        "**💪 Developer Motivation: [Catchy Title]**\\n\\n"
+        "[2-3 sentences of encouraging advice for developers]\\n\\n"
+        "**🎯 Action Steps:**\\n"
+        "• [Actionable step 1]\\n"
+        "• [Actionable step 2]\\n\\n"
+        "**💡 Remember:**\\n"
+        "[One powerful closing thought]\\n\\n"
+        "Keep it positive, practical, and under 120 words. Focus on career growth, learning, or work-life balance."
     )
 }
 

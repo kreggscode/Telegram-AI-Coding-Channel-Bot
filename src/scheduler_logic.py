@@ -12,7 +12,7 @@ def get_local_hour_24() -> int:
 def decide_post_type() -> str:
     """
     Decide what to post based on hour.
-    Updated for better engagement with more images and variety.
+    Updated for 5 posts per day with better engagement.
 
     Returns one of:
     - "python_text"
@@ -23,6 +23,7 @@ def decide_post_type() -> str:
     - "image_plus_text"
     - "poll"
     - "thread"
+    - "motivational_tip"
     """
     hour = get_local_hour_24()
 
@@ -32,25 +33,26 @@ def decide_post_type() -> str:
     
     # Late Morning: JavaScript with image (10 AM - 1 PM)
     elif 10 <= hour < 13:
-        return "image_plus_text"  # Changed from plain js_text
+        return "image_plus_text"
     
     # Afternoon: ML/AI with code examples (1-4 PM)
     elif 13 <= hour < 16:
-        return "ml_text"  # Now includes code snippets
+        return "ml_text"
     
-    # Late Afternoon: Tech News (4-6 PM)
-    elif 16 <= hour < 18:
+    # Late Afternoon: Tech News (4-7 PM)
+    elif 16 <= hour < 19:
         return "tech_news_text"
     
-    # Evening: Clean Code or Image (6-8 PM)
-    elif 18 <= hour < 20:
+    # Evening: Clean Code or Poll (7-10 PM)
+    elif 19 <= hour < 22:
         return "clean_code_text"
     
-    # Night: Poll (8-10 PM)
-    elif 20 <= hour < 22:
-        return "poll"
+    # Late Night: Motivational/Career Tips (10 PM - 12 AM)
+    elif 22 <= hour < 24:
+        return "motivational_tip"
     
-    # Late Night: Thread explainer (10 PM - 6 AM)
+    # Very Late Night/Early Morning: Thread explainer (12 AM - 6 AM)
     else:
         return "thread"
+
 
