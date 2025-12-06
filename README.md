@@ -1,13 +1,14 @@
-# Telegram AI Coding Channel Bot
+#  OK
 
 This repo automatically posts AI-generated coding content to a Telegram **channel**.
 
 ## Features
-- 🤖 AI text and image posts (via Pollinations.ai, no API key needed)
-- 📊 AI-generated polls
-- 🧵 AI-generated mini-threads
-- 🎨 Dashboard web UI (Flask) to manually trigger posts
-- ⏰ Automated scheduling via GitHub Actions
+- 🤖 **AI-Powered Content** - Uses Pollinations.ai (no API key needed)
+- 🎲 **Variety System** - 50+ topics with randomization to prevent repetition
+- 💻 **Code-Focused** - 4 posts/day, all with code snippets and examples
+- 📋 **Copy Buttons** - All code snippets have native Telegram copy buttons
+- 🎨 **Dashboard** - Flask web UI to manually trigger posts
+- ⏰ **Auto-Scheduling** - GitHub Actions runs 4x daily at optimal times
 
 ## 1. Setup Telegram Bot & Channel
 
@@ -47,6 +48,14 @@ This runs one cycle (posts something depending on current time).
    - `TIMEZONE_OFFSET_HOURS` (e.g. 5.5 for IST)
 
 GitHub Actions will run automatically according to the schedule in `.github/workflows/auto-post.yml`.
+
+### Posting Schedule (IST)
+- **8:00 AM** - Python tips with code examples
+- **1:00 PM** - JavaScript/ML tips with AI-generated images
+- **6:00 PM** - ML/AI tips with code examples
+- **9:00 PM** - Clean code examples (before/after comparisons)
+
+All posts include code snippets with copy buttons!
 
 ## 4. Dashboard (Manual Control)
 

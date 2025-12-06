@@ -5,25 +5,25 @@ from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES
 
 
 def post_python_tip():
-    prompt = TEXT_TEMPLATES["python_tip"]
+    prompt = TEXT_TEMPLATES["python_tip"]()  # Call the function to get dynamic prompt
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_js_tip():
-    prompt = TEXT_TEMPLATES["js_tip"]
+    prompt = TEXT_TEMPLATES["js_tip"]()  # Call the function to get dynamic prompt
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_ml_tip():
-    prompt = TEXT_TEMPLATES["ml_tip"]
+    prompt = TEXT_TEMPLATES["ml_tip"]()  # Call the function to get dynamic prompt
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_clean_code_tip():
-    prompt = TEXT_TEMPLATES["clean_code"]
+    prompt = TEXT_TEMPLATES["clean_code"]()  # Call the function to get dynamic prompt
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
@@ -83,11 +83,7 @@ def post_thread():
         tg.send_thread(parts)
 
 
-def post_motivational_tip():
-    """Post motivational/career advice for developers"""
-    prompt = TEXT_TEMPLATES["motivational_tip"]
-    text = ai.generate_text(prompt)
-    tg.send_text(text)
+
 
 
 def main():
@@ -110,8 +106,7 @@ def main():
         post_poll()
     elif post_type == "thread":
         post_thread()
-    elif post_type == "motivational_tip":
-        post_motivational_tip()
+
     else:
         tg.send_text("No valid post type decided.")
 

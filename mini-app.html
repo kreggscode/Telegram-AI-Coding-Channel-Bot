@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KreggsCode - AI Coding Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #13131a;
+            --bg-tertiary: #1a1a24;
+            --bg-card: rgba(26, 26, 36, 0.8);
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #ec4899;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-2: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --gradient-3: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            --gradient-4: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-gradient-1 {
+            background: var(--gradient-1);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .bg-gradient-2 {
+            background: var(--gradient-2);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: 5s;
+        }
+
+        .bg-gradient-3 {
+            background: var(--gradient-3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-50px, 50px) scale(0.9);
+            }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(10, 10, 15, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        /* Header */
+        .header {
+            padding: 20px 20px 16px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            box-shadow: var(--shadow-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: var(--shadow-glow);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            }
+        }
+
+        .brand-info h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-primary);
+        }
+
+        .social-icon.instagram {
+            background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+        }
+
+        .social-icon.youtube {
+            background: #ff0000;
+        }
+
+        .social-icon.playstore {
+            background: #34a853;
+        }
+
+        .social-icon.website {
+            background: var(--gradient-1);
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tab-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-1);
+            color: var(--text-primary);
+            border-color: transparent;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .tab-btn:hover:not(.active) {
+            border-color: var(--accent-primary);
+            transform: translateY(-1px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Input Fields */
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            resize: vertical;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        textarea.input-field {
+            min-height: 120px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        select.input-field {
+            cursor: pointer;
+        }
+
+        /* Code Display */
+        .code-output {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-lang {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .code-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Chat Messages */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 16px;
+            max-width: 85%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message.user {
+            background: var(--gradient-1);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 6px;
+        }
+
+        /* Topic Grid */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .topic-card {
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-primary);
+        }
+
+        .topic-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .topic-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Tips Card */
+        .tip-card {
+            background: var(--gradient-1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tip-card::before {
+            content: '💡';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 120px;
+            opacity: 0.1;
+        }
+
+        .tip-category {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .tip-text {
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 12px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header {
+                padding: 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Feature Badge */
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-left: 8px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .empty-subtext {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-gradient bg-gradient-1"></div>
+        <div class="bg-gradient bg-gradient-2"></div>
+        <div class="bg-gradient bg-gradient-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo-section">
+                    <div class="logo">KC</div>
+                    <div class="brand-info">
+                        <h1>KreggsCode</h1>
+                        <p>AI Coding Assistant</p>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/kreggscode/" target="_blank" class="social-icon instagram"
+                        title="Instagram">
+                        📸
+                    </a>
+                    <a href="https://www.youtube.com/@kreggscode" target="_blank" class="social-icon youtube"
+                        title="YouTube">
+                        ▶️
+                    </a>
+                    <a href="https://play.google.com/store/apps/dev?id=4822923174061161987" target="_blank"
+                        class="social-icon playstore" title="Play Store">
+                        📱
+                    </a>
+                    <a href="https://kreggscode.com/" target="_blank" class="social-icon website" title="Website">
+                        🌐
+                    </a>
+                </div>
+            </div>
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="code"><span>💻 Code Gen</span></button>
+                <button class="tab-btn" data-tab="chat"><span>💬 AI Chat</span></button>
+                <button class="tab-btn" data-tab="topics"><span>📚 Topics</span></button>
+                <button class="tab-btn" data-tab="tips"><span>✨ Tips</span></button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Code Generator Tab -->
+            <div class="tab-content active" id="code-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--gradient-1);">💻</div>
+                        <div>
+                            <div class="card-title">Code Snippet Generator</div>
+                            <div class="card-subtitle">Generate production-ready code</div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Programming Language</label>
+                        <select class="input-field" id="code-language">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="go">Go</option>
+                            <option value="rust">Rust</option>
+                            <option value="kotlin">Kotlin</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">What do you want to build?</label>
+                        <textarea class="input-field" id="code-prompt"
+                            placeholder="E.g., Create a REST API endpoint for user authentication..."></textarea>
+                    </div>
+
+                    <button class="btn" onclick="generateCode()">
+                        <span>🚀 Generate Code</span>
+                    </button>
+
+                    <div class="loading" id="code-loading">
+                        <div class="spinner"></div>
+                        <div class="loading-text">Generating your code...</div>
+                    </div>
+
+                    <div id="code-result"></div>
+                </div>
+            </div>
+
+            <!-- AI Chat Tab -->
+            <div class="tab-content" id="chat-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--gradient-2);">💬</div>
+                        <div>
+                            <div class="card-title">AI Assistant</div>
+                            <div class="card-subtitle">Ask me anything about coding</div>
+                        </div>
+                    </div>
+
+                    <div class="chat-container" id="chat-messages">
+                        <div class="empty-state">
+                            <div class="empty-icon">🤖</div>
+                            <div class="empty-text">Start a conversation</div>
+                            <div class="empty-subtext">Ask me about Python, ML, blockchain, or anything!</div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <textarea class="input-field" id="chat-input"
+                            placeholder="Ask me anything about coding, ML, blockchain..." rows="3"></textarea>
+                    </div>
+
+                    <button class="btn" onclick="sendMessage()">
+                        <span>📤 Send Message</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Topics Tab -->
+            <div class="tab-content" id="topics-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--gradient-3);">📚</div>
+                        <div>
+                            <div class="card-title">Learning Topics</div>
+                            <div class="card-subtitle">Explore different areas</div>
+                        </div>
+                    </div>
+
+                    <div class="topic-grid">
+                        <div class="topic-card" onclick="exploreTopic('Python Programming')">
+                            <div class="topic-icon">🐍</div>
+                            <div class="topic-name">Python</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('Machine Learning')">
+                            <div class="topic-icon">🤖</div>
+                            <div class="topic-name">Machine Learning</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('Blockchain')">
+                            <div class="topic-icon">⛓️</div>
+                            <div class="topic-name">Blockchain</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('Web Development')">
+                            <div class="topic-icon">🌐</div>
+                            <div class="topic-name">Web Dev</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('Data Science')">
+                            <div class="topic-icon">📊</div>
+                            <div class="topic-name">Data Science</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('Algorithms')">
+                            <div class="topic-icon">🧮</div>
+                            <div class="topic-name">Algorithms</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('DevOps')">
+                            <div class="topic-icon">⚙️</div>
+                            <div class="topic-name">DevOps</div>
+                        </div>
+                        <div class="topic-card" onclick="exploreTopic('Cybersecurity')">
+                            <div class="topic-icon">🔒</div>
+                            <div class="topic-name">Security</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="topic-content"></div>
+            </div>
+
+            <!-- Tips Tab -->
+            <div class="tab-content" id="tips-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--gradient-4);">✨</div>
+                        <div>
+                            <div class="card-title">Daily Tips & Motivation</div>
+                            <div class="card-subtitle">Level up your skills</div>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="generateTip()">
+                        <span>🎲 Get Random Tip</span>
+                    </button>
+
+                    <div class="loading" id="tip-loading">
+                        <div class="spinner"></div>
+                        <div class="loading-text">Generating tip...</div>
+                    </div>
+
+                    <div id="tip-result"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Tab Switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update active tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        // Code Generation Templates
+        const codeTemplates = {
+            python: {
+                'REST API': `from flask import Flask, jsonify, request
+from functools import wraps
+import jwt
+from datetime import datetime, timedelta
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key'
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 401
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except:
+            return jsonify({'message': 'Token is invalid'}), 401
+        return f(*args, **kwargs)
+    return decorated
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    auth = request.get_json()
+    if auth and auth['username'] == 'admin' and auth['password'] == 'password':
+        token = jwt.encode({
+            'user': auth['username'],
+            'exp': datetime.utcnow() + timedelta(hours=24)
+        }, app.config['SECRET_KEY'])
+        return jsonify({'token': token})
+    return jsonify({'message': 'Invalid credentials'}), 401
+
+@app.route('/api/protected', methods=['GET'])
+@token_required
+def protected():
+    return jsonify({'message': 'This is a protected route'})
+
+if __name__ == '__main__':
+    app.run(debug=True)`,
+                'Machine Learning': `import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+import joblib
+
+class MLModel:
+    def __init__(self):
+        self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+        self.scaler = StandardScaler()
+        
+    def prepare_data(self, X, y):
+        """Split and scale the data"""
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+        X_train_scaled = self.scaler.fit_transform(X_train)
+        X_test_scaled = self.scaler.transform(X_test)
+        return X_train_scaled, X_test_scaled, y_train, y_test
+    
+    def train(self, X_train, y_train):
+        """Train the model"""
+        self.model.fit(X_train, y_train)
+        print("Model trained successfully!")
+    
+    def evaluate(self, X_test, y_test):
+        """Evaluate model performance"""
+        predictions = self.model.predict(X_test)
+        accuracy = accuracy_score(y_test, predictions)
+        print(f"Accuracy: {accuracy:.4f}")
+        print("\\nClassification Report:")
+        print(classification_report(y_test, predictions))
+        return accuracy
+    
+    def save_model(self, filename='model.pkl'):
+        """Save the trained model"""
+        joblib.dump({'model': self.model, 'scaler': self.scaler}, filename)
+        print(f"Model saved to {filename}")
+    
+    def load_model(self, filename='model.pkl'):
+        """Load a trained model"""
+        data = joblib.load(filename)
+        self.model = data['model']
+        self.scaler = data['scaler']
+        print(f"Model loaded from {filename}")
+
+# Usage example
+if __name__ == "__main__":
+    # Load your data
+    # df = pd.read_csv('your_data.csv')
+    # X = df.drop('target', axis=1)
+    # y = df['target']
+    
+    ml_model = MLModel()
+    # X_train, X_test, y_train, y_test = ml_model.prepare_data(X, y)
+    # ml_model.train(X_train, y_train)
+    # ml_model.evaluate(X_test, y_test)
+    # ml_model.save_model()`,
+                'Data Processing': `import pandas as pd
+import numpy as np
+from datetime import datetime
+
+class DataProcessor:
+    def __init__(self, filepath):
+        self.df = pd.read_csv(filepath)
+        self.original_shape = self.df.shape
+        
+    def clean_data(self):
+        """Clean and preprocess the data"""
+        print(f"Original shape: {self.original_shape}")
+        
+        # Remove duplicates
+        self.df.drop_duplicates(inplace=True)
+        print(f"After removing duplicates: {self.df.shape}")
+        
+        # Handle missing values
+        numeric_cols = self.df.select_dtypes(include=[np.number]).columns
+        self.df[numeric_cols] = self.df[numeric_cols].fillna(self.df[numeric_cols].median())
+        
+        categorical_cols = self.df.select_dtypes(include=['object']).columns
+        self.df[categorical_cols] = self.df[categorical_cols].fillna(self.df[categorical_cols].mode().iloc[0])
+        
+        print(f"Missing values handled: {self.df.isnull().sum().sum()} remaining")
+        
+    def feature_engineering(self):
+        """Create new features"""
+        # Example: Create date-based features
+        if 'date' in self.df.columns:
+            self.df['date'] = pd.to_datetime(self.df['date'])
+            self.df['year'] = self.df['date'].dt.year
+            self.df['month'] = self.df['date'].dt.month
+            self.df['day_of_week'] = self.df['date'].dt.dayofweek
+            
+    def get_statistics(self):
+        """Get data statistics"""
+        print("\\nData Statistics:")
+        print(self.df.describe())
+        print("\\nData Types:")
+        print(self.df.dtypes)
+        print(f"\\nMemory Usage: {self.df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
+        
+    def export_data(self, filename='processed_data.csv'):
+        """Export processed data"""
+        self.df.to_csv(filename, index=False)
+        print(f"Data exported to {filename}")
+
+# Usage
+processor = DataProcessor('your_data.csv')
+processor.clean_data()
+processor.feature_engineering()
+processor.get_statistics()
+processor.export_data()`
+            },
+            javascript: {
+                'REST API': `const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+const app = express();
+app.use(express.json());
+
+const SECRET_KEY = 'your-secret-key';
+
+// Middleware for authentication
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Access token required' });
+    }
+    
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid token' });
+        }
+        req.user = user;
+        next();
+    });
+};
+
+// Login endpoint
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    
+    // In production, verify against database
+    if (username === 'admin' && password === 'password') {
+        const token = jwt.sign(
+            { username, userId: 1 },
+            SECRET_KEY,
+            { expiresIn: '24h' }
+        );
+        
+        res.json({ 
+            success: true,
+            token,
+            user: { username }
+        });
+    } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+    }
+});
+
+// Protected route
+app.get('/api/protected', authenticateToken, (req, res) => {
+    res.json({ 
+        message: 'This is protected data',
+        user: req.user
+    });
+});
+
+// User data endpoint
+app.get('/api/users/:id', authenticateToken, (req, res) => {
+    const userId = req.params.id;
+    res.json({
+        id: userId,
+        username: 'john_doe',
+        email: 'john@example.com',
+        createdAt: new Date()
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(\`Server running on port \${PORT}\`);
+});`,
+                'React Component': `import React, { useState, useEffect } from 'react';
+import './Dashboard.css';
+
+const Dashboard = () => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [filter, setFilter] = useState('all');
+
+    useEffect(() => {
+        fetchData();
+    }, [filter]);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(\`/api/data?filter=\${filter}\`);
+            if (!response.ok) throw new Error('Failed to fetch data');
+            const result = await response.json();
+            setData(result);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await fetch(\`/api/data/\${id}\`, { method: 'DELETE' });
+            setData(data.filter(item => item.id !== id));
+        } catch (err) {
+            console.error('Delete failed:', err);
+        }
+    };
+
+    if (loading) return <div className="loading">Loading...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
+
+    return (
+        <div className="dashboard">
+            <header className="dashboard-header">
+                <h1>Dashboard</h1>
+                <div className="filters">
+                    <button onClick={() => setFilter('all')} 
+                            className={filter === 'all' ? 'active' : ''}>
+                        All
+                    </button>
+                    <button onClick={() => setFilter('active')}
+                            className={filter === 'active' ? 'active' : ''}>
+                        Active
+                    </button>
+                    <button onClick={() => setFilter('archived')}
+                            className={filter === 'archived' ? 'active' : ''}>
+                        Archived
+                    </button>
+                </div>
+            </header>
+
+            <div className="data-grid">
+                {data.map(item => (
+                    <div key={item.id} className="data-card">
+                        <h3>{item.title}</h3>
+                        <p>{item.description}</p>
+                        <div className="card-actions">
+                            <button onClick={() => handleDelete(item.id)}>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default Dashboard;`
+            }
+        };
+
+        // Generate Code Function
+        function generateCode() {
+            const language = document.getElementById('code-language').value;
+            const prompt = document.getElementById('code-prompt').value;
+            const loading = document.getElementById('code-loading');
+            const result = document.getElementById('code-result');
+
+            if (!prompt.trim()) {
+                alert('Please describe what you want to build!');
+                return;
+            }
+
+            loading.style.display = 'block';
+            result.innerHTML = '';
+
+            // Simulate API call
+            setTimeout(() => {
+                loading.style.display = 'none';
+
+                // Select appropriate template
+                let code = '';
+                const templates = codeTemplates[language] || {};
+                const templateKeys = Object.keys(templates);
+
+                if (templateKeys.length > 0) {
+                    const randomTemplate = templates[templateKeys[Math.floor(Math.random() * templateKeys.length)]];
+                    code = randomTemplate;
+                } else {
+                    code = `# ${language.toUpperCase()} Code\n# ${prompt}\n\n# Your generated code will appear here\n# This is a demo - integrate with your AI backend for real generation`;
+                }
+
+                result.innerHTML = `
+                    <div class="code-output">
+                        <div class="code-header">
+                            <span class="code-lang">${language}</span>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                        </div>
+                        <pre class="code-content">${escapeHtml(code)}</pre>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        // Chat Messages
+        let chatHistory = [];
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const chatContainer = document.getElementById('chat-messages');
+
+            // Clear empty state if present
+            if (chatHistory.length === 0) {
+                chatContainer.innerHTML = '';
+            }
+
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+
+            // Simulate AI response
+            setTimeout(() => {
+                const responses = [
+                    "Great question! In Python, you can achieve this by using list comprehensions for cleaner code. Here's an example: `[x**2 for x in range(10)]`",
+                    "Machine Learning is fascinating! Start with understanding supervised vs unsupervised learning. I recommend beginning with scikit-learn for practical implementations.",
+                    "For blockchain development, Solidity is the go-to language for Ethereum smart contracts. Make sure to understand gas optimization!",
+                    "That's an interesting problem! Consider using dynamic programming to optimize the solution. The time complexity would be O(n²) but we can reduce it to O(n log n).",
+                    "Web development tip: Always validate user input on both client and server side. Never trust data coming from the frontend!",
+                    "For data science projects, start with exploratory data analysis (EDA). Use pandas, matplotlib, and seaborn to understand your data before modeling.",
+                    "DevOps best practice: Implement CI/CD pipelines early. Tools like GitHub Actions, Jenkins, or GitLab CI can automate your deployment process.",
+                    "Security tip: Always hash passwords using bcrypt or argon2. Never store passwords in plain text, and use environment variables for sensitive data."
+                ];
+
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage('ai', randomResponse);
+            }, 1000);
+        }
+
+        function addMessage(type, text) {
+            const chatContainer = document.getElementById('chat-messages');
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `
+                <div class="message-text">${escapeHtml(text)}</div>
+                <div class="message-time">${time}</div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            chatHistory.push({ type, text, time });
+        }
+
+        // Allow Enter to send message
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+        });
+
+        // Explore Topics
+        function exploreTopic(topic) {
+            const topicContent = document.getElementById('topic-content');
+
+            const topicInfo = {
+                'Python Programming': {
+                    icon: '🐍',
+                    description: 'Master Python from basics to advanced concepts',
+                    points: [
+                        'Data structures and algorithms',
+                        'Object-oriented programming',
+                        'Decorators and generators',
+                        'Async/await and concurrency',
+                        'Popular frameworks: Django, Flask, FastAPI'
+                    ]
+                },
+                'Machine Learning': {
+                    icon: '🤖',
+                    description: 'Build intelligent systems with ML',
+                    points: [
+                        'Supervised and unsupervised learning',
+                        'Neural networks and deep learning',
+                        'Model evaluation and optimization',
+                        'Libraries: scikit-learn, TensorFlow, PyTorch',
+                        'Real-world project deployment'
+                    ]
+                },
+                'Blockchain': {
+                    icon: '⛓️',
+                    description: 'Decentralized applications and smart contracts',
+                    points: [
+                        'Blockchain fundamentals',
+                        'Smart contract development with Solidity',
+                        'Web3.js and Ethereum integration',
+                        'DeFi and NFT concepts',
+                        'Security best practices'
+                    ]
+                },
+                'Web Development': {
+                    icon: '🌐',
+                    description: 'Build modern, responsive web applications',
+                    points: [
+                        'HTML5, CSS3, and JavaScript ES6+',
+                        'React, Vue, or Angular frameworks',
+                        'RESTful APIs and GraphQL',
+                        'Authentication and authorization',
+                        'Performance optimization'
+                    ]
+                },
+                'Data Science': {
+                    icon: '📊',
+                    description: 'Extract insights from data',
+                    points: [
+                        'Data cleaning and preprocessing',
+                        'Statistical analysis',
+                        'Data visualization with matplotlib/seaborn',
+                        'Pandas and NumPy mastery',
+                        'Big data tools: Spark, Hadoop'
+                    ]
+                },
+                'Algorithms': {
+                    icon: '🧮',
+                    description: 'Master problem-solving techniques',
+                    points: [
+                        'Time and space complexity analysis',
+                        'Sorting and searching algorithms',
+                        'Dynamic programming',
+                        'Graph algorithms',
+                        'Competitive programming strategies'
+                    ]
+                },
+                'DevOps': {
+                    icon: '⚙️',
+                    description: 'Automate and streamline development',
+                    points: [
+                        'CI/CD pipelines',
+                        'Docker and containerization',
+                        'Kubernetes orchestration',
+                        'Infrastructure as Code (Terraform)',
+                        'Monitoring and logging'
+                    ]
+                },
+                'Cybersecurity': {
+                    icon: '🔒',
+                    description: 'Protect systems and data',
+                    points: [
+                        'Network security fundamentals',
+                        'Penetration testing',
+                        'Secure coding practices',
+                        'Cryptography basics',
+                        'Incident response'
+                    ]
+                }
+            };
+
+            const info = topicInfo[topic];
+
+            topicContent.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--gradient-3); font-size: 28px;">${info.icon}</div>
+                        <div>
+                            <div class="card-title">${topic}</div>
+                            <div class="card-subtitle">${info.description}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary);">KEY CONCEPTS</h3>
+                        ${info.points.map(point => `
+                            <div style="padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 14px;">
+                                ✓ ${point}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn" style="margin-top: 16px;" onclick="startLearning('${topic}')">
+                        <span>🚀 Start Learning</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        function startLearning(topic) {
+            alert(`Great choice! Start learning ${topic}. Check out KreggsCode YouTube channel for tutorials!`);
+        }
+
+        // Generate Tips
+        const tips = {
+            coding: [
+                "Write code that is easy to read and maintain. Your future self will thank you!",
+                "Always use version control (Git). Commit early, commit often.",
+                "Don't repeat yourself (DRY). If you're copying code, consider creating a function.",
+                "Test your code! Unit tests save time and prevent bugs in production.",
+                "Code reviews are learning opportunities. Embrace feedback and learn from others."
+            ],
+            motivation: [
+                "Every expert was once a beginner. Keep learning, keep growing!",
+                "Debugging is like being a detective. Enjoy the process of solving mysteries!",
+                "The best time to start was yesterday. The second best time is now.",
+                "Consistency beats intensity. Code a little every day.",
+                "Your only competition is who you were yesterday. Focus on progress, not perfection."
+            ],
+            career: [
+                "Build projects, not just tutorials. Employers want to see what you can create.",
+                "Contribute to open source. It's great for learning and networking.",
+                "Create a strong online presence: GitHub, LinkedIn, and a personal website.",
+                "Network with other developers. Join communities, attend meetups, engage online.",
+                "Never stop learning. Technology evolves fast, and so should you."
+            ],
+            productivity: [
+                "Use the Pomodoro Technique: 25 minutes of focused work, 5-minute break.",
+                "Learn keyboard shortcuts. They save hours in the long run.",
+                "Automate repetitive tasks. If you do it more than twice, script it!",
+                "Take breaks. Your brain needs rest to solve complex problems.",
+                "Keep a coding journal. Document what you learn and problems you solve."
+            ]
+        };
+
+        function generateTip() {
+            const loading = document.getElementById('tip-loading');
+            const result = document.getElementById('tip-result');
+
+            loading.style.display = 'block';
+            result.innerHTML = '';
+
+            setTimeout(() => {
+                loading.style.display = 'none';
+
+                const categories = Object.keys(tips);
+                const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                const categoryTips = tips[randomCategory];
+                const randomTip = categoryTips[Math.floor(Math.random() * categoryTips.length)];
+
+                const gradients = [
+                    'var(--gradient-1)',
+                    'var(--gradient-2)',
+                    'var(--gradient-3)',
+                    'var(--gradient-4)'
+                ];
+                const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+
+                result.innerHTML = `
+                    <div class="tip-card" style="background: ${randomGradient};">
+                        <div class="tip-category">${randomCategory}</div>
+                        <div class="tip-text">${randomTip}</div>
+                    </div>
+                `;
+            }, 800);
+        }
+
+        // Copy Code Function
+        function copyCode(button) {
+            const codeContent = button.closest('.code-output').querySelector('.code-content');
+            const text = codeContent.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.style.color = 'var(--success)';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Generate initial tip on load
+        window.addEventListener('load', () => {
+            // Optional: Auto-generate a tip when tips tab is first opened
+        });
+    </script>
+</body>
+
+</html>

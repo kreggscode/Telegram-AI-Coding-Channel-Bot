@@ -1,58 +1,112 @@
-TEXT_TEMPLATES = {
-    "python_tip": (
-        "Write a Python programming tip with this EXACT format:\n\n"
+import random
+
+# Topic pools for variety
+PYTHON_TOPICS = [
+    "list comprehensions", "decorators", "generators", "context managers", 
+    "lambda functions", "f-strings", "dataclasses", "async/await", 
+    "type hints", "walrus operator", "match statements", "itertools",
+    "collections module", "pathlib", "enumerate tricks", "zip function"
+]
+
+JS_TOPICS = [
+    "destructuring", "spread operator", "async/await", "promises", 
+    "arrow functions", "template literals", "optional chaining", 
+    "nullish coalescing", "array methods", "modules", "fetch API",
+    "map/filter/reduce", "closures", "event delegation", "proxy objects"
+]
+
+ML_TOPICS = [
+    "linear regression", "decision trees", "neural networks", "k-means clustering",
+    "random forests", "gradient descent", "feature scaling", "cross-validation",
+    "confusion matrix", "overfitting prevention", "data preprocessing", "model evaluation"
+]
+
+CLEAN_CODE_TOPICS = [
+    "meaningful variable names", "single responsibility", "DRY principle",
+    "function length", "error handling", "code comments", "magic numbers",
+    "nested conditionals", "early returns", "code duplication"
+]
+
+
+def get_python_prompt():
+    topic = random.choice(PYTHON_TOPICS)
+    return (
+        f"Write a Python programming tip about '{topic}' with this EXACT format:\n\n"
         "**🐍 Python Tip: [Catchy Title]**\n\n"
         "[Brief 2-3 sentence explanation]\n\n"
         "**💡 Example:**\n"
         "```python\n"
-        "[working code example]\n"
+        "[working code example - make it practical and different from common examples]\n"
         "```\n\n"
         "**✨ Why This Matters:**\n"
         "• [Benefit 1]\n"
         "• [Benefit 2]\n\n"
-        "Keep total under 150 words. Use actual code that works."
-    ),
-    "js_tip": (
-        "Write a JavaScript tip with this EXACT format:\n\n"
+        f"Keep total under 150 words. Use actual code that works. Focus on {topic}. "
+        "Make this example unique and creative, not the typical tutorial example."
+    )
+
+
+def get_js_prompt():
+    topic = random.choice(JS_TOPICS)
+    return (
+        f"Write a JavaScript tip about '{topic}' with this EXACT format:\n\n"
         "**⚡ JavaScript Pro Tip: [Catchy Title]**\n\n"
         "[Brief 2-3 sentence explanation about modern ES6+ feature]\n\n"
         "**💡 Code Example:**\n"
         "```javascript\n"
-        "[working code example]\n"
+        "[working code example - make it practical and modern]\n"
         "```\n\n"
         "**🎯 Key Benefits:**\n"
         "• [Benefit 1]\n"
         "• [Benefit 2]\n\n"
-        "Keep total under 150 words. Make it practical and modern."
-    ),
-    "ml_tip": (
-        "Write a machine learning tip with this EXACT format:\n\n"
+        f"Keep total under 150 words. Focus on {topic}. "
+        "Make it practical, modern, and show a real-world use case."
+    )
+
+
+def get_ml_prompt():
+    topic = random.choice(ML_TOPICS)
+    return (
+        f"Write a machine learning tip about '{topic}' with this EXACT format:\n\n"
         "**🤖 ML/AI Tip: [Catchy Title]**\n\n"
         "[Brief 2-3 sentence explanation for beginners]\n\n"
         "**💡 Code Example:**\n"
         "```python\n"
-        "[simple working code example using scikit-learn or similar]\n"
+        "[simple working code example using scikit-learn, numpy, or pandas]\n"
         "```\n\n"
         "**📊 Pro Tips:**\n"
         "• [Practical tip 1]\n"
         "• [Practical tip 2]\n\n"
-        "Keep total under 180 words. Include actual code."
-    ),
-    "clean_code": (
-        "Write a clean code principle with this EXACT format:\n\n"
+        f"Keep total under 180 words. Focus on {topic}. "
+        "Include actual working code with a unique example."
+    )
+
+
+def get_clean_code_prompt():
+    topic = random.choice(CLEAN_CODE_TOPICS)
+    return (
+        f"Write a clean code principle about '{topic}' with this EXACT format:\n\n"
         "**✨ Clean Code Principle: [Principle Name]**\n\n"
         "[Brief explanation in 2-3 sentences]\n\n"
         "**❌ Bad Example:**\n"
         "```python\n"
-        "[bad code example]\n"
+        "[bad code example showing the problem]\n"
         "```\n\n"
         "**✅ Good Example:**\n"
         "```python\n"
-        "[improved code example]\n"
+        "[improved code example showing the solution]\n"
         "```\n\n"
         "**🎯 Remember:** [One key takeaway]\n\n"
-        "Keep total under 150 words."
-    ),
+        f"Keep total under 150 words. Focus on {topic}. "
+        "Use realistic code examples, not foo/bar placeholders."
+    )
+
+
+TEXT_TEMPLATES = {
+    "python_tip": get_python_prompt,
+    "js_tip": get_js_prompt,
+    "ml_tip": get_ml_prompt,
+    "clean_code": get_clean_code_prompt,
     "tech_news": (
         "Write a short tech/coding news update with this EXACT format:\n\n"
         "**📰 Tech News: [Headline]**\n\n"
@@ -62,7 +116,7 @@ TEXT_TEMPLATES = {
         "• [Impact point 2]\n\n"
         "**💭 For Developers:**\n"
         "[One sentence about how this affects developers]\n\n"
-        "Keep it current, relevant, and under 120 words. Make it sound recent."
+        "Keep it current, relevant, and under 120 words. Make it sound recent and exciting."
     ),
     "thread_explainer": (
         "Explain a programming concept with this EXACT format:\n\n"
@@ -81,17 +135,6 @@ TEXT_TEMPLATES = {
         "Create ONE multiple choice coding question. "
         "Format strictly as: Question? | Option A, Option B, Option C. "
         "Make it short and clear, suitable for a Telegram poll."
-    ),
-    "motivational_tip": (
-        "Write an inspiring developer career tip with this EXACT format:\\n\\n"
-        "**💪 Developer Motivation: [Catchy Title]**\\n\\n"
-        "[2-3 sentences of encouraging advice for developers]\\n\\n"
-        "**🎯 Action Steps:**\\n"
-        "• [Actionable step 1]\\n"
-        "• [Actionable step 2]\\n\\n"
-        "**💡 Remember:**\\n"
-        "[One powerful closing thought]\\n\\n"
-        "Keep it positive, practical, and under 120 words. Focus on career growth, learning, or work-life balance."
     )
 }
 
