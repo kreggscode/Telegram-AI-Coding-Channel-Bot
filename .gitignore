@@ -5,6 +5,14 @@
 SECURITY_AUDIT_REPORT.md
 URGENT_TOKEN_REVOCATION.md
 BEFORE_AFTER_COMPARISON.md
+DEPLOYMENT_SUMMARY.md
+5_POSTS_UPGRADE_SUMMARY.md
+FINAL_VERIFICATION.md
+GITHUB_ACTIONS_VERIFICATION.md
+POSTING_SCHEDULE.md
+
+# Keep only essential markdown files
+# README.md and SETUP_GUIDE.md are NOT ignored (they should be tracked)
 
 # Python
 __pycache__/
