@@ -12,17 +12,14 @@ def get_local_hour_24() -> int:
 def decide_post_type() -> str:
     """
     Decide what to post based on hour.
-    Updated for 4 posts per day - ALL CODE FOCUSED.
+    Updated for 4 posts per day - ALL CODE FOCUSED, TEXT ONLY.
 
     Returns one of:
     - "python_text"
     - "js_text"
     - "ml_text"
     - "clean_code_text"
-    - "tech_news_text"
-    - "image_plus_text"
-    - "poll"
-    - "thread"
+    - "thread" (fallback for late night)
     """
     hour = get_local_hour_24()
 
@@ -30,9 +27,9 @@ def decide_post_type() -> str:
     if 6 <= hour < 10:
         return "python_text"
     
-    # Afternoon: JavaScript/ML with image (1 PM)
+    # Afternoon: JavaScript tips with code (1 PM)
     elif 10 <= hour < 16:
-        return "image_plus_text"
+        return "js_text"
     
     # Evening: ML/AI with code examples (6 PM)
     elif 16 <= hour < 20:
