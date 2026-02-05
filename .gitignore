@@ -50,4 +50,5 @@ env/
 
 # OS
 .DS_Store
-Thumbs.db
+# Generated Magazine PDFs
+*.pdf
