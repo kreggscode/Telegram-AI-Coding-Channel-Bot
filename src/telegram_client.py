@@ -43,3 +43,16 @@ def send_poll(question: str, options: list[str]):
 def send_thread(messages: list[str]):
     for msg in messages:
         send_text(msg)
+
+
+def send_document(file_path: str, caption: str = ""):
+    url = f"{BASE_URL}/sendDocument"
+    with open(file_path, "rb") as f:
+        files = {"document": f}
+        data = {
+            "chat_id": CHAT_ID,
+            "caption": caption,
+            "parse_mode": "Markdown"
+        }
+        resp = requests.post(url, data=data, files=files)
+    return resp

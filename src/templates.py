@@ -1,30 +1,34 @@
 import random
 
-# Topic pools for variety
+# Advanced Topic pools for high-quality variety
 PYTHON_TOPICS = [
-    "list comprehensions", "decorators", "generators", "context managers", 
-    "lambda functions", "f-strings", "dataclasses", "async/await", 
-    "type hints", "walrus operator", "match statements", "itertools",
-    "collections module", "pathlib", "enumerate tricks", "zip function"
+    "metaclasses and type creation", "asyncio advanced concurrency", "memory management & __slots__", 
+    "descriptors and property setters", "contextlib and custom managers", "threading vs multiprocessing",
+    "structural pattern matching (Python 3.10+)", "itertools & functools masterclass",
+    "type hinting with Protocol and Generics", "pydantic data validation", "bytecode & dis module",
+    "advanced decorators with arguments", "collections.deque and heapQ", "profile & cProfile optimization"
 ]
 
 JS_TOPICS = [
-    "destructuring", "spread operator", "async/await", "promises", 
-    "arrow functions", "template literals", "optional chaining", 
-    "nullish coalescing", "array methods", "modules", "fetch API",
-    "map/filter/reduce", "closures", "event delegation", "proxy objects"
+    "custom web components & shadow DOM", "Service Workers & PWA basics", "WebWorkers for heavy computation",
+    "advanced Proxy & Reflect API", "JavaScript Generators & Iterators", "Bitwise operations in JS",
+    "Functional Programming: Currying & Composition", "Intersection & Resize Observer APIs",
+    "Typed Arrays & ArrayBuffers", "Memory Management & Garbage Collection", "Event Loop & microtasks deep dive",
+    "Design Patterns: Singleton, Factory, Observer", "AbortController for fetch cancellation"
 ]
 
 ML_TOPICS = [
-    "linear regression", "decision trees", "neural networks", "k-means clustering",
-    "random forests", "gradient descent", "feature scaling", "cross-validation",
-    "confusion matrix", "overfitting prevention", "data preprocessing", "model evaluation"
+    "Transformer architecture basics", "LSTMs vs GRUs for time series", "Hyperparameter tuning with Optuna",
+    "SHAP & LIME for model explainability", "Transfer learning with HuggingFace", "Custom loss functions in PyTorch",
+    "Generative Adversarial Networks (GANs)", "Reinforcement Learning: Q-Learning", "Dimensionality Reduction: UMAP vs t-SNE",
+    "Handling Imbalanced Data: SMOTE & ADASYN", "Vector Databases for RAG", "Quantization for model deployment"
 ]
 
 CLEAN_CODE_TOPICS = [
-    "meaningful variable names", "single responsibility", "DRY principle",
-    "function length", "error handling", "code comments", "magic numbers",
-    "nested conditionals", "early returns", "code duplication"
+    "SOLID principles deep dive", "Clean Architecture & Layering", "TDD: Test Driven Development",
+    "Refactoring Legacy Code safely", "Design Patterns for Scalability", "Defensive Programming techniques",
+    "Effective Error Handling strategies", "Composition over Inheritance", "Code Review best practices",
+    "Domain Driven Design (DDD) basics"
 ]
 
 

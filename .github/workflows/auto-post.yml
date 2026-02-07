@@ -2,10 +2,10 @@ name: Telegram AI Auto Poster
 
 on:
   schedule:
-    # Optimized for IST (India Standard Time) - 4 CODE-FOCUSED posts per day
-    # Posts at: 8:00 AM, 1:00 PM, 6:00 PM, 9:00 PM IST
-    # Which is: 2:30 AM, 7:30 AM, 12:30 PM, 3:30 PM UTC
-    - cron: "30 2,7,12,15 * * *"
+    # Optimized for IST (India Standard Time) - 5-6 posts per day including Magazine
+    # Posts at: 8:00 AM, 11:00 AM, 2:00 PM, 6:00 PM, 9:00 PM IST
+    # Which is: 2:30 AM, 5:30 AM, 8:30 AM, 12:30 PM, 3:30 PM UTC
+    - cron: "30 2,5,8,12,15 * * *"
   workflow_dispatch:  # Allows manual triggering from Actions tab
 
 jobs:
@@ -30,5 +30,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           TIMEZONE_OFFSET_HOURS: ${{ secrets.TIMEZONE_OFFSET_HOURS }}
+          POLLINATIONS_API_KEY: ${{ secrets.POLLINATIONS_API_KEY }}
+          AI_MODEL: ${{ secrets.AI_MODEL }}
         run: |
           python -m src.main

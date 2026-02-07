@@ -3,31 +3,83 @@ import requests
 import random
 import time
 from datetime import datetime
-
+from .config import POLLINATIONS_API_KEY, AI_MODEL
 
 def generate_text(prompt: str) -> str:
-    """Generate free-form text from Pollinations.ai with randomization for variety."""
-    # Add randomization to ensure unique content every day
+    """Generate high-quality text using the paid Pollinations.ai API with fallback."""
+    if not POLLINATIONS_API_KEY:
+        print("CRITICAL: Pollinations API Key missing.")
+        return "Pollinations API Key missing. Please check your config."
+
     seed = random.randint(1000, 999999)
-    timestamp = int(time.time())
     date_str = datetime.now().strftime("%Y-%m-%d")
     
-    # Enhance prompt with context to ensure variety
-    enhanced_prompt = f"{prompt}\n\nIMPORTANT: Make this unique and different. Today's date: {date_str}. Generate fresh, original content not seen before. Seed: {seed}"
+    # Enhanced prompt for better code/tips
+    enhanced_prompt = f"{prompt}\n\nIMPORTANT: Provide high-quality, professional, and unique content. Today's date: {date_str}. Seed: {seed}"
     
-    encoded = urllib.parse.quote(enhanced_prompt)
-    # Add seed parameter to URL for additional randomization
-    url = f"https://text.pollinations.ai/{encoded}?seed={seed}&timestamp={timestamp}"
+    url = "https://gen.pollinations.ai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {POLLINATIONS_API_KEY}",
+        "Content-Type": "application/json"
+    }
     
-    resp = requests.get(url, timeout=30)
-    if resp.status_code == 200:
-        return resp.text.strip()
-    return "AI generation failed. Please try again."
+    # Try with original model, then fallback to 'openai' if it fails
+    models_to_try = [AI_MODEL, "openai"]
+    
+    for model in models_to_try:
+        attempts = 2
+        for i in range(attempts):
+            payload = {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": "You are a professional software engineer and coding tutor. Your goal is to provide insightful, accurate, and helpful coding tips, news, and explanations."},
+                    {"role": "user", "content": enhanced_prompt}
+                ],
+                "seed": seed
+            }
+            
+            try:
+                print(f"LOG: AI Request (Model: {model}, Attempt: {i+1})...")
+                resp = requests.post(url, headers=headers, json=payload, timeout=120)
+                
+                if resp.status_code == 200:
+                    try:
+                        data = resp.json()
+                        content = data['choices'][0]['message']['content'].strip()
+                        # Check if the content itself looks like an error message from Pollinations
+                        if "AI generation failed" in content or "Please try again" in content:
+                            print(f"WARNING: AI returned an error-like message: {content}")
+                            continue
+                        return content
+                    except (ValueError, KeyError, IndexError) as e:
+                        print(f"ERROR: Failed to parse AI JSON response: {e}. Raw: {resp.text[:200]}")
+                        continue
+                else:
+                    print(f"ERROR: Pollinations API {resp.status_code} - {resp.text}")
+                    if resp.status_code == 402:
+                        return "API Error: Payment Required (No Pollen/Credits)."
+                    if resp.status_code == 401:
+                        return "API Error: Invalid API Key."
+            except Exception as e:
+                print(f"EXCEPTION during AI generation ({model}): {e}")
+            
+            if i < attempts - 1:
+                time.sleep(2)
+        
+        print(f"LOG: Model {model} failed all attempts. Trying next model if available...")
+
+    return "AI generation failed. Please check API status or credits."
 
 
-def image_url(prompt: str) -> str:
-    """Return an image URL from Pollinations based on prompt with randomization."""
+def image_url(prompt: str, model: str = "flux") -> str:
+    """Return an image URL from Pollinations based on prompt with authorization."""
     seed = random.randint(1000, 999999)
     encoded = urllib.parse.quote(prompt)
-    # Add seed for image variety
-    return f"https://image.pollinations.ai/prompt/{encoded}?seed={seed}"
+    
+    # Using the gen.pollinations.ai endpoint for paid image generation if needed
+    # but the simple URL works too if the key is passed as a query param
+    # Authenticated URL format: https://gen.pollinations.ai/image/{prompt}?key={key}&model={model}&seed={seed}
+    
+    base_url = "https://gen.pollinations.ai/image"
+    auth_query = f"&key={POLLINATIONS_API_KEY}" if POLLINATIONS_API_KEY else ""
+    return f"{base_url}/{encoded}?model={model}&seed={seed}{auth_query}&nologo=true"
