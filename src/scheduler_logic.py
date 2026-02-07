@@ -19,7 +19,7 @@ def decide_post_type() -> str:
     - "python_text" (11 AM)
     - "js_text" (2 PM)
     - "ml_text" (6 PM)
-    - "clean_code_text" (9 PM)
+    - "security_text" (9 PM)
     - "thread" (Late night)
     """
     hour = get_local_hour_24()
@@ -28,21 +28,21 @@ def decide_post_type() -> str:
     if 7 <= hour < 10:
         return "magazine"
     
-    # Late Morning: Python tips with code (11 AM)
+    # Late Morning: Python mastery course (11 AM)
     elif 10 <= hour < 13:
         return "python_text"
     
-    # Afternoon: JavaScript tips with code (2 PM)
+    # Afternoon: JavaScript pro course (2 PM)
     elif 13 <= hour < 17:
         return "js_text"
     
-    # Evening: ML/AI with code examples (6 PM)
+    # Evening: AI/ML engineering course (6 PM)
     elif 17 <= hour < 20:
         return "ml_text"
     
-    # Night: Clean Code examples (9 PM)
+    # Night: Cyber Security & Bug Bounty course (9 PM)
     elif 20 <= hour < 24:
-        return "clean_code_text"
+        return "security_text"
     
     # Late Night/Early Morning: Thread explainer (fallback)
     else:

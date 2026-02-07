@@ -34,14 +34,14 @@ def post_ml_tip():
     print("SUCCESS: ML tip posted.")
 
 
-def post_clean_code_tip():
-    prompt = TEXT_TEMPLATES["clean_code"]()
+def post_security_tip():
+    prompt = TEXT_TEMPLATES["security_tip"]()
     text = ai.generate_text(prompt)
     if "AI generation failed" in text or "API Error" in text:
-        print(f"FAILED: Clean Code tip generation failed: {text}")
+        print(f"FAILED: Security tip generation failed: {text}")
         return
     tg.send_text(text)
-    print("SUCCESS: Clean Code tip posted.")
+    print("SUCCESS: Security tip posted.")
 
 
 def post_tech_news():
@@ -141,8 +141,8 @@ def main():
         post_js_tip()
     elif post_type == "ml_text":
         post_ml_tip()
-    elif post_type == "clean_code_text":
-        post_clean_code_tip()
+    elif post_type == "security_text":
+        post_security_tip()
     elif post_type == "tech_news_text":
         post_tech_news()
     elif post_type == "image_plus_text":

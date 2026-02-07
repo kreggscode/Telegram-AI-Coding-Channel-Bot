@@ -1,108 +1,104 @@
-import random
+from datetime import datetime
+from .config import COURSE_START_DATE
+
+def get_current_day():
+    """Calculate the current day of the course."""
+    start = datetime.strptime(COURSE_START_DATE, "%Y-%m-%d")
+    now = datetime.now()
+    delta = now - start
+    return max(1, delta.days + 1)
 
 # Advanced Topic pools for high-quality variety
 PYTHON_TOPICS = [
-    "metaclasses and type creation", "asyncio advanced concurrency", "memory management & __slots__", 
-    "descriptors and property setters", "contextlib and custom managers", "threading vs multiprocessing",
-    "structural pattern matching (Python 3.10+)", "itertools & functools masterclass",
-    "type hinting with Protocol and Generics", "pydantic data validation", "bytecode & dis module",
-    "advanced decorators with arguments", "collections.deque and heapQ", "profile & cProfile optimization"
+    "Object Oriented Programming (OOP)", "Generators and Iterators", "Decorators", "Context Managers",
+    "List/Dict Comprehensions", "Metaclasses", "Multithreading vs Multiprocessing", "AsyncIO and Concurrency",
+    "Type Hinting", "Regular Expressions", "File I/O and OS module", "Networking with Requests/Sockets",
+    "Data Structures (Queues, Stacks, Heaps)", "Algorithm Complexity (Big O)"
 ]
 
 JS_TOPICS = [
-    "custom web components & shadow DOM", "Service Workers & PWA basics", "WebWorkers for heavy computation",
-    "advanced Proxy & Reflect API", "JavaScript Generators & Iterators", "Bitwise operations in JS",
-    "Functional Programming: Currying & Composition", "Intersection & Resize Observer APIs",
-    "Typed Arrays & ArrayBuffers", "Memory Management & Garbage Collection", "Event Loop & microtasks deep dive",
-    "Design Patterns: Singleton, Factory, Observer", "AbortController for fetch cancellation"
+    "ES6+ Features", "Asynchronous JS (Promises, Async/Await)", "Closures and Scopes", "Prototypal Inheritance",
+    "DOM Manipulation", "Event Loop Mechanics", "Functional Programming", "Higher Order Functions",
+    "Storage (LocalStorage, IndexedDB)", "Web APIs (Fetch, Geolocation)", "Module Systems (ESM vs CJS)",
+    "Performance Optimization", "Security Best Practices (XSS, CSRF)"
 ]
 
 ML_TOPICS = [
-    "Transformer architecture basics", "LSTMs vs GRUs for time series", "Hyperparameter tuning with Optuna",
-    "SHAP & LIME for model explainability", "Transfer learning with HuggingFace", "Custom loss functions in PyTorch",
-    "Generative Adversarial Networks (GANs)", "Reinforcement Learning: Q-Learning", "Dimensionality Reduction: UMAP vs t-SNE",
-    "Handling Imbalanced Data: SMOTE & ADASYN", "Vector Databases for RAG", "Quantization for model deployment"
+    "Supervised vs Unsupervised Learning", "Linear and Logistic Regression", "Decision Trees and Random Forests",
+    "Neural Network Architectures", "Natural Language Processing (NLP)", "Computer Vision Basics",
+    "Feature Engineering", "Model Evaluation Metrics", "Reinforcement Learning", "Deep Learning with PyTorch",
+    "Gradient Descent Optimization", "Clustering Algorithms"
 ]
 
-CLEAN_CODE_TOPICS = [
-    "SOLID principles deep dive", "Clean Architecture & Layering", "TDD: Test Driven Development",
-    "Refactoring Legacy Code safely", "Design Patterns for Scalability", "Defensive Programming techniques",
-    "Effective Error Handling strategies", "Composition over Inheritance", "Code Review best practices",
-    "Domain Driven Design (DDD) basics"
+SECURITY_TOPICS = [
+    "Web Application Pentesting (OWASP Top 10)", "SQL Injection (SQLi)", "Cross-Site Scripting (XSS)", 
+    "Broken Authentication", "Insecure Direct Object References (IDOR)", "Subdomain Takeover",
+    "API Security Vulnerabilities", "Network Hacking and Nmap", "Buffer Overflows", "Privilege Escalation",
+    "Reverse Engineering basics", "Bug Bounty Hunting Methodologies"
 ]
 
 
 def get_python_prompt():
+    day = get_current_day()
     topic = random.choice(PYTHON_TOPICS)
     return (
-        f"Write a Python programming tip about '{topic}' with this EXACT format:\n\n"
-        "**🐍 Python Tip: [Catchy Title]**\n\n"
-        "[Brief 2-3 sentence explanation]\n\n"
-        "**💡 Example:**\n"
-        "```python\n"
-        "[working code example - make it practical and different from common examples]\n"
-        "```\n\n"
-        "**✨ Why This Matters:**\n"
-        "• [Benefit 1]\n"
-        "• [Benefit 2]\n\n"
-        f"Keep total under 150 words. Use actual code that works. Focus on {topic}. "
-        "Make this example unique and creative, not the typical tutorial example."
+        f"You are teaching a Python course. Today is **Day {day}**. "
+        f"Topic: {topic}. "
+        "Create a lesson that includes:\n"
+        "1. A clear header: **🐍 Python Mastery: Day [X] - [Topic Name]**\n"
+        "2. A detailed yet concise explanation of the concept.\n"
+        "3. A high-quality, professional code snippet using triple backticks and the 'python' language tag so it's easy to copy-paste.\n"
+        "4. 2-3 bullet points on practical use cases.\n\n"
+        "STRICT RULE: The code must be in this format for Telegram copy-paste to work:\n"
+        "```python\n[CODE HERE]\n```\n"
+        f"Make this unique for {topic}."
     )
 
 
 def get_js_prompt():
+    day = get_current_day()
     topic = random.choice(JS_TOPICS)
     return (
-        f"Write a JavaScript tip about '{topic}' with this EXACT format:\n\n"
-        "**⚡ JavaScript Pro Tip: [Catchy Title]**\n\n"
-        "[Brief 2-3 sentence explanation about modern ES6+ feature]\n\n"
-        "**💡 Code Example:**\n"
-        "```javascript\n"
-        "[working code example - make it practical and modern]\n"
-        "```\n\n"
-        "**🎯 Key Benefits:**\n"
-        "• [Benefit 1]\n"
-        "• [Benefit 2]\n\n"
-        f"Keep total under 150 words. Focus on {topic}. "
-        "Make it practical, modern, and show a real-world use case."
+        f"You are teaching a JavaScript course. Today is **Day {day}**. "
+        f"Topic: {topic}. "
+        "Create a lesson that includes:\n"
+        "1. A clear header: **⚡ JavaScript Pro Course: Day [X] - [Topic Name]**\n"
+        "2. A detailed yet concise explanation using modern ES6+ standards.\n"
+        "3. A high-quality code snippet using triple backticks and 'javascript' for copy-paste compatibility.\n"
+        "4. A 'Pro Tip' highlight.\n\n"
+        "STRICT RULE: The code must be in this format:\n"
+        "```javascript\n[CODE HERE]\n```\n"
+        f"Make this unique for {topic}."
     )
 
 
 def get_ml_prompt():
+    day = get_current_day()
     topic = random.choice(ML_TOPICS)
     return (
-        f"Write a machine learning tip about '{topic}' with this EXACT format:\n\n"
-        "**🤖 ML/AI Tip: [Catchy Title]**\n\n"
-        "[Brief 2-3 sentence explanation for beginners]\n\n"
-        "**💡 Code Example:**\n"
-        "```python\n"
-        "[simple working code example using scikit-learn, numpy, or pandas]\n"
-        "```\n\n"
-        "**📊 Pro Tips:**\n"
-        "• [Practical tip 1]\n"
-        "• [Practical tip 2]\n\n"
-        f"Keep total under 180 words. Focus on {topic}. "
-        "Include actual working code with a unique example."
+        f"You are teaching Machine Learning. Today is **Day {day}**. "
+        f"Topic: {topic}. "
+        "Create a lesson that includes:\n"
+        "1. A clear header: **🤖 AI/ML Engineering: Day [X] - [Topic Name]**\n"
+        "2. A clear explanation of the mathematical or logical concept.\n"
+        "3. A working code example using numpy, pandas, or scikit-learn in triple backticks ('python' tag).\n"
+        "4. A 'Real-world Application' point.\n\n"
+        "STRICT RULE: Use triple backticks for the code snippet so it's copy-pasteable."
     )
 
 
-def get_clean_code_prompt():
-    topic = random.choice(CLEAN_CODE_TOPICS)
+def get_security_prompt():
+    day = get_current_day()
+    topic = random.choice(SECURITY_TOPICS)
     return (
-        f"Write a clean code principle about '{topic}' with this EXACT format:\n\n"
-        "**✨ Clean Code Principle: [Principle Name]**\n\n"
-        "[Brief explanation in 2-3 sentences]\n\n"
-        "**❌ Bad Example:**\n"
-        "```python\n"
-        "[bad code example showing the problem]\n"
-        "```\n\n"
-        "**✅ Good Example:**\n"
-        "```python\n"
-        "[improved code example showing the solution]\n"
-        "```\n\n"
-        "**🎯 Remember:** [One key takeaway]\n\n"
-        f"Keep total under 150 words. Focus on {topic}. "
-        "Use realistic code examples, not foo/bar placeholders."
+        f"You are teaching Cybersecurity and Bug Bounty Hunting. Today is **Day {day}**. "
+        f"Topic: {topic}. "
+        "Create a highly detailed technical lesson that includes:\n"
+        "1. A clear header: **🔓 Cyber Security & Bug Bounty: Day [X] - [Topic Name]**\n"
+        "2. Detailed information on the vulnerability or technique.\n"
+        "3. A code snippet (PoC), payload, or script (e.g., Python, Bash) in triple backticks.\n"
+        "4. 2-3 Remediation steps to fix the bug.\n\n"
+        "STRICT RULE: Ensure all code/payloads are in triple backticks for easy copy-pasting."
     )
 
 
@@ -110,7 +106,7 @@ TEXT_TEMPLATES = {
     "python_tip": get_python_prompt,
     "js_tip": get_js_prompt,
     "ml_tip": get_ml_prompt,
-    "clean_code": get_clean_code_prompt,
+    "security_tip": get_security_prompt,
     "tech_news": (
         "Write a short tech/coding news update with this EXACT format:\n\n"
         "**📰 Tech News: [Headline]**\n\n"

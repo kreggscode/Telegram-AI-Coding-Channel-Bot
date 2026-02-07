@@ -28,3 +28,7 @@ print(f"---------------------------")
 
 if not BOT_TOKEN or not CHAT_ID:
     raise RuntimeError("BOT_TOKEN or CHAT_ID is not set. Check your environment or .env file.")
+
+# Course tracking logic (Stateless 'Day X' calculation)
+# We calculate days since this date to show "Day 1", "Day 2", etc.
+COURSE_START_DATE = "2026-02-01" 
