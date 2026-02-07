@@ -42,16 +42,13 @@ def get_python_prompt():
     day = get_current_day()
     topic = random.choice(PYTHON_TOPICS)
     return (
-        f"You are teaching a Python course. Today is **Day {day}**. "
-        f"Topic: {topic}. "
-        "Create a lesson that includes:\n"
-        "1. A clear header: **🐍 Python Mastery: Day [X] - [Topic Name]**\n"
-        "2. A detailed yet concise explanation of the concept.\n"
-        "3. A high-quality, professional code snippet using triple backticks and the 'python' language tag so it's easy to copy-paste.\n"
-        "4. 2-3 bullet points on practical use cases.\n\n"
-        "STRICT RULE: The code must be in this format for Telegram copy-paste to work:\n"
-        "```python\n[CODE HERE]\n```\n"
-        f"Make this unique for {topic}."
+        f"Today is Day {day} of the Elite Python Course. Topic: {topic}. "
+        "Create an advanced lesson (100 words max) including:\n"
+        "1. Header: **🐍 Python Mastery: Day [X] - [Topic]**\n"
+        "2. An extreme/advanced engineering insight.\n"
+        "3. A professional code snippet in triple backticks.\n"
+        "STRICT: No beginner talk. Focus on high-performance logic. "
+        "Use triple backticks for code so it's copy-pasteable."
     )
 
 
@@ -59,16 +56,12 @@ def get_js_prompt():
     day = get_current_day()
     topic = random.choice(JS_TOPICS)
     return (
-        f"You are teaching a JavaScript course. Today is **Day {day}**. "
-        f"Topic: {topic}. "
-        "Create a lesson that includes:\n"
-        "1. A clear header: **⚡ JavaScript Pro Course: Day [X] - [Topic Name]**\n"
-        "2. A detailed yet concise explanation using modern ES6+ standards.\n"
-        "3. A high-quality code snippet using triple backticks and 'javascript' for copy-paste compatibility.\n"
-        "4. A 'Pro Tip' highlight.\n\n"
-        "STRICT RULE: The code must be in this format:\n"
-        "```javascript\n[CODE HERE]\n```\n"
-        f"Make this unique for {topic}."
+        f"Today is Day {day} of the Modern JavaScript Pro Course. Topic: {topic}. "
+        "Create an advanced lesson (100 words max) including:\n"
+        "1. Header: **⚡ JS Pro: Day [X] - [Topic]**\n"
+        "2. Senior-level architectural insight (ES6+).\n"
+        "3. A clean code snippet in triple backticks.\n"
+        "STRICT: No 'hello world' examples. Focus on production-grade logic."
     )
 
 
@@ -76,14 +69,12 @@ def get_ml_prompt():
     day = get_current_day()
     topic = random.choice(ML_TOPICS)
     return (
-        f"You are teaching Machine Learning. Today is **Day {day}**. "
-        f"Topic: {topic}. "
-        "Create a lesson that includes:\n"
-        "1. A clear header: **🤖 AI/ML Engineering: Day [X] - [Topic Name]**\n"
-        "2. A clear explanation of the mathematical or logical concept.\n"
-        "3. A working code example using numpy, pandas, or scikit-learn in triple backticks ('python' tag).\n"
-        "4. A 'Real-world Application' point.\n\n"
-        "STRICT RULE: Use triple backticks for the code snippet so it's copy-pasteable."
+        f"Today is Day {day} of the AI/ML Engineering Course. Topic: {topic}. "
+        "Create a technical lesson (120 words max) including:\n"
+        "1. Header: **🤖 ML Engineering: Day [X] - [Topic]**\n"
+        "2. Mathematical or structural insight.\n"
+        "3. A scikit-learn/numpy/torch code snippet in triple backticks.\n"
+        "STRICT: Focus on performance and scalability."
     )
 
 
@@ -91,14 +82,12 @@ def get_security_prompt():
     day = get_current_day()
     topic = random.choice(SECURITY_TOPICS)
     return (
-        f"You are teaching Cybersecurity and Bug Bounty Hunting. Today is **Day {day}**. "
-        f"Topic: {topic}. "
-        "Create a highly detailed technical lesson that includes:\n"
-        "1. A clear header: **🔓 Cyber Security & Bug Bounty: Day [X] - [Topic Name]**\n"
-        "2. Detailed information on the vulnerability or technique.\n"
-        "3. A code snippet (PoC), payload, or script (e.g., Python, Bash) in triple backticks.\n"
-        "4. 2-3 Remediation steps to fix the bug.\n\n"
-        "STRICT RULE: Ensure all code/payloads are in triple backticks for easy copy-pasting."
+        f"Today is Day {day} of the Cyber Security & Bug Bounty Course. Topic: {topic}. "
+        "Create a 'wild' technical lesson (120 words max) including:\n"
+        "1. Header: **🔓 Cyber Security: Day [X] - [Topic]**\n"
+        "2. Detailed exploit/vulnerability logic.\n"
+        "3. A PoC script/payload in triple backticks.\n"
+        "STRICT: Make it sound professional and advanced."
     )
 
 

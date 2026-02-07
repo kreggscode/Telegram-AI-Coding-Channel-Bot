@@ -17,36 +17,20 @@ def decide_post_type() -> str:
     Returns one of:
     - "magazine" (8 AM)
     - "python_text" (11 AM)
-    - "js_text" (2 PM)
-    - "ml_text" (6 PM)
-    - "security_text" (9 PM)
-    - "thread" (Late night)
+    - "tech_bundle" (All technical Tracks combined)
     """
     hour = get_local_hour_24()
 
     # Early Morning: Daily Magazine (8 AM)
-    if 7 <= hour < 10:
+    if 6 <= hour < 10:
         return "magazine"
     
-    # Late Morning: Python mastery course (11 AM)
-    elif 10 <= hour < 13:
-        return "python_text"
+    # Rest of the day: Master Technical Bundle (Python, JS, ML, Security)
+    elif 10 <= hour < 24:
+        return "tech_bundle"
     
-    # Afternoon: JavaScript pro course (2 PM)
-    elif 13 <= hour < 17:
-        return "js_text"
-    
-    # Evening: AI/ML engineering course (6 PM)
-    elif 17 <= hour < 20:
-        return "ml_text"
-    
-    # Night: Cyber Security & Bug Bounty course (9 PM)
-    elif 20 <= hour < 24:
-        return "security_text"
-    
-    # Late Night/Early Morning: Thread explainer (fallback)
     else:
-        return "thread"
+        return "tech_bundle" # Fallback to bundle for late night
 
 
 
