@@ -11,26 +11,29 @@ def get_local_hour_24() -> int:
 
 def decide_post_type() -> str:
     """
-    Decide what to post based on hour.
-    Updated for 4 posts per day - ALL CODE FOCUSED, TEXT ONLY.
-
-    Returns one of:
-    - "magazine" (8 AM)
-    - "python_text" (11 AM)
-    - "tech_bundle" (All technical Tracks combined)
+    Decide what to post based on hour (IST).
+    
+    Schedule:
+    - 8:00 AM: Magazine
+    - 11:00 AM: Python
+    - 2:00 PM: JavaScript
+    - 6:00 PM: ML Engineering
+    - 9:00 PM: Cyber Security
     """
     hour = get_local_hour_24()
 
-    # Early Morning: Daily Magazine (8 AM)
     if 6 <= hour < 10:
         return "magazine"
-    
-    # Rest of the day: Master Technical Bundle (Python, JS, ML, Security)
-    elif 10 <= hour < 24:
-        return "tech_bundle"
-    
+    elif 10 <= hour < 13:
+        return "python"
+    elif 13 <= hour < 16:
+        return "javascript"
+    elif 16 <= hour < 19:
+        return "ml"
+    elif 19 <= hour < 24:
+        return "security"
     else:
-        return "tech_bundle" # Fallback to bundle for late night
+        return "magazine" # Default to magazine for early/late hours if triggered
 
 
 

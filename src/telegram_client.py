@@ -12,6 +12,8 @@ def send_text(text: str):
         "parse_mode": "Markdown"
     }
     resp = requests.post(url, data=data)
+    if resp.status_code != 200:
+        print(f"ERROR: Telegram sendMessage failed ({resp.status_code}): {resp.text}")
     return resp
 
 
@@ -24,6 +26,8 @@ def send_photo(image_url: str, caption: str = ""):
         "parse_mode": "Markdown"
     }
     resp = requests.post(url, data=data)
+    if resp.status_code != 200:
+        print(f"ERROR: Telegram sendPhoto failed ({resp.status_code}): {resp.text}")
     return resp
 
 
@@ -37,6 +41,8 @@ def send_poll(question: str, options: list[str]):
         "is_anonymous": False
     }
     resp = requests.post(url, data=data)
+    if resp.status_code != 200:
+        print(f"ERROR: Telegram sendPoll failed ({resp.status_code}): {resp.text}")
     return resp
 
 
@@ -47,12 +53,18 @@ def send_thread(messages: list[str]):
 
 def send_document(file_path: str, caption: str = ""):
     url = f"{BASE_URL}/sendDocument"
-    with open(file_path, "rb") as f:
-        files = {"document": f}
-        data = {
-            "chat_id": CHAT_ID,
-            "caption": caption,
-            "parse_mode": "Markdown"
-        }
-        resp = requests.post(url, data=data, files=files)
-    return resp
+    try:
+        with open(file_path, "rb") as f:
+            files = {"document": f}
+            data = {
+                "chat_id": CHAT_ID,
+                "caption": caption,
+                "parse_mode": "Markdown"
+            }
+            resp = requests.post(url, data=data, files=files)
+            if resp.status_code != 200:
+                print(f"ERROR: Telegram sendDocument failed ({resp.status_code}): {resp.text}")
+            return resp
+    except Exception as e:
+        print(f"EXCEPTION sending document: {e}")
+        return None

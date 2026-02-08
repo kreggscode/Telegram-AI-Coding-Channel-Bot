@@ -1,5 +1,8 @@
 from datetime import datetime
+import random
 from .config import COURSE_START_DATE
+
+print("LOG: Using Templates Engine v2.1")
 
 def get_current_day():
     """Calculate the current day of the course."""

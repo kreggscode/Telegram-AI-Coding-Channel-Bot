@@ -3,6 +3,8 @@ from . import telegram_client as tg
 from . import scheduler_logic as sched
 from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES
 
+print("LOG: Bot Intelligence v2.1 Activated")
+
 
 def post_technical_bundle():
     """Consolidated 4-Course Elite Bundle in a single message."""
@@ -47,6 +49,33 @@ def post_technical_bundle():
     print("SUCCESS: Technical Bundle posted.")
 
 
+def post_single_topic(topic_key: str):
+    """Generate and post a single technical topic."""
+    topic_map = {
+        "python": ("Python Mastery", TEXT_TEMPLATES["python_tip"]),
+        "javascript": ("JS Pro", TEXT_TEMPLATES["js_tip"]),
+        "ml": ("ML Engineering", TEXT_TEMPLATES["ml_tip"]),
+        "security": ("Cyber Security", TEXT_TEMPLATES["security_tip"])
+    }
+    
+    if topic_key not in topic_map:
+        print(f"ERROR: Unknown topic key {topic_key}")
+        return
+
+    name, prompt_fn = topic_map[topic_key]
+    try:
+        print(f"LOG: Generating {name}...")
+        content = ai.generate_text(prompt_fn())
+        if "AI generation failed" in content or "API Error" in content:
+            print(f"ERROR: AI generation failed for {name}.")
+            return
+        
+        tg.send_text(content)
+        print(f"SUCCESS: {name} posted.")
+    except Exception as e:
+        print(f"ERROR: Exception generating {name}: {e}")
+
+
 def post_daily_magazine():
     """Generate and post the daily magazine PDF"""
     from .magazine_generator import create_magazine
@@ -65,6 +94,8 @@ def main():
 
     if post_type == "magazine":
         post_daily_magazine()
+    elif post_type in ["python", "javascript", "ml", "security"]:
+        post_single_topic(post_type)
     elif post_type == "tech_bundle":
         post_technical_bundle()
     else:
