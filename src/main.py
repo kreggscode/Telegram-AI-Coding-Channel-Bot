@@ -50,7 +50,7 @@ def post_technical_bundle():
 
 
 def post_single_topic(topic_key: str):
-    """Generate and post a single technical topic."""
+    """Generate and post a single technical topic with an interactive quiz."""
     topic_map = {
         "python": ("Python Mastery", TEXT_TEMPLATES["python_tip"]),
         "javascript": ("JS Pro", TEXT_TEMPLATES["js_tip"]),
@@ -64,13 +64,55 @@ def post_single_topic(topic_key: str):
 
     name, prompt_fn = topic_map[topic_key]
     try:
-        print(f"LOG: Generating {name}...")
+        print(f"LOG: Generating {name} with Quiz...")
         content = ai.generate_text(prompt_fn())
         if "AI generation failed" in content or "API Error" in content:
             print(f"ERROR: AI generation failed for {name}.")
             return
         
-        tg.send_text(content)
+        # Robust Quiz Parsing
+        main_text = content
+        quiz_data = None
+        
+        if "[QUIZ]" in content and "[/QUIZ]" in content:
+            try:
+                parts = content.split("[QUIZ]")
+                main_text = parts[0].strip()
+                quiz_block = parts[1].split("[/QUIZ]")[0].strip()
+                
+                q, opts, correct, expl = "", [], 0, ""
+                for line in quiz_block.split("\n"):
+                    line = line.strip()
+                    if line.lower().startswith("question:"): q = line.split(":", 1)[1].strip()
+                    elif line.lower().startswith("options:"): 
+                        # Handle comma or bracket separated options
+                        raw_opts = line.split(":", 1)[1].strip()
+                        opts = [o.strip().strip("[]") for o in raw_opts.split(",")]
+                    elif line.lower().startswith("correct:"):
+                        import re
+                        m = re.search(r"(\d)", line)
+                        if m: correct = int(m.group(1))
+                    elif line.lower().startswith("explanation:"): expl = line.split(":", 1)[1].strip()
+
+                if q and len(opts) >= 2:
+                    # Telegram Limits: Question 255, Option 100, Explanation 200
+                    quiz_data = {
+                        "question": (q[:250] + "...") if len(q) > 255 else q,
+                        "options": [((o[:95] + "...") if len(o) > 100 else o) for o in opts[:10]],
+                        "correct_option_id": correct,
+                        "explanation": (expl[:195] + "...") if len(expl) > 200 else expl
+                    }
+            except Exception as pe:
+                print(f"WARNING: Quiz parsing error: {pe}")
+
+        # Send Content
+        tg.send_text(main_text)
+        
+        # Send Quiz if available
+        if quiz_data:
+            print(f"LOG: Sending Quiz for {name}...")
+            tg.send_quiz(**quiz_data)
+            
         print(f"SUCCESS: {name} posted.")
     except Exception as e:
         print(f"ERROR: Exception generating {name}: {e}")

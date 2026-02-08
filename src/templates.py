@@ -46,12 +46,18 @@ def get_python_prompt():
     topic = random.choice(PYTHON_TOPICS)
     return (
         f"Today is Day {day} of the Elite Python Course. Topic: {topic}. "
-        "Create an advanced lesson (100 words max) including:\n"
+        "Create a detailed advanced lesson (200 words max) including:\n"
         "1. Header: **🐍 Python Mastery: Day [X] - [Topic]**\n"
-        "2. An extreme/advanced engineering insight.\n"
-        "3. A professional code snippet in triple backticks.\n"
-        "STRICT: No beginner talk. Focus on high-performance logic. "
-        "Use triple backticks for code so it's copy-pasteable."
+        "2. Senior-level architectural insight.\n"
+        "3. A professional, production-grade code snippet.\n"
+        "4. A [QUIZ] section exactly in this format:\n"
+        "[QUIZ]\n"
+        "Question: [The question]\n"
+        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Correct: [Index 0-3]\n"
+        "Explanation: [Brief explanation of why it is correct]\n"
+        "[/QUIZ]\n"
+        "STRICT: Focus on high-performance logic. Use triple backticks for code."
     )
 
 
@@ -60,11 +66,18 @@ def get_js_prompt():
     topic = random.choice(JS_TOPICS)
     return (
         f"Today is Day {day} of the Modern JavaScript Pro Course. Topic: {topic}. "
-        "Create an advanced lesson (100 words max) including:\n"
+        "Create a detailed advanced lesson (200 words max) including:\n"
         "1. Header: **⚡ JS Pro: Day [X] - [Topic]**\n"
         "2. Senior-level architectural insight (ES6+).\n"
-        "3. A clean code snippet in triple backticks.\n"
-        "STRICT: No 'hello world' examples. Focus on production-grade logic."
+        "3. A clean, production-grade code snippet.\n"
+        "4. A [QUIZ] section exactly in this format:\n"
+        "[QUIZ]\n"
+        "Question: [The question]\n"
+        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Correct: [Index 0-3]\n"
+        "Explanation: [Brief explanation of why it is correct]\n"
+        "[/QUIZ]\n"
+        "STRICT: No beginner talk. Focus on professional-grade logic."
     )
 
 
@@ -73,10 +86,17 @@ def get_ml_prompt():
     topic = random.choice(ML_TOPICS)
     return (
         f"Today is Day {day} of the AI/ML Engineering Course. Topic: {topic}. "
-        "Create a technical lesson (120 words max) including:\n"
+        "Create a detailed technical lesson (200 words max) including:\n"
         "1. Header: **🤖 ML Engineering: Day [X] - [Topic]**\n"
         "2. Mathematical or structural insight.\n"
-        "3. A scikit-learn/numpy/torch code snippet in triple backticks.\n"
+        "3. A scikit-learn/numpy/torch code snippet.\n"
+        "4. A [QUIZ] section exactly in this format:\n"
+        "[QUIZ]\n"
+        "Question: [The question]\n"
+        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Correct: [Index 0-3]\n"
+        "Explanation: [Brief explanation of why it is correct]\n"
+        "[/QUIZ]\n"
         "STRICT: Focus on performance and scalability."
     )
 
@@ -86,10 +106,17 @@ def get_security_prompt():
     topic = random.choice(SECURITY_TOPICS)
     return (
         f"Today is Day {day} of the Cyber Security & Bug Bounty Course. Topic: {topic}. "
-        "Create a 'wild' technical lesson (120 words max) including:\n"
+        "Create a 'wild' detailed technical lesson (200 words max) including:\n"
         "1. Header: **🔓 Cyber Security: Day [X] - [Topic]**\n"
         "2. Detailed exploit/vulnerability logic.\n"
-        "3. A PoC script/payload in triple backticks.\n"
+        "3. A PoC script or payload.\n"
+        "4. A [QUIZ] section exactly in this format:\n"
+        "[QUIZ]\n"
+        "Question: [The question]\n"
+        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Correct: [Index 0-3]\n"
+        "Explanation: [Brief explanation of why it is correct]\n"
+        "[/QUIZ]\n"
         "STRICT: Make it sound professional and advanced."
     )
 
