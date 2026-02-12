@@ -90,7 +90,7 @@ def create_magazine():
     pdf.set_x(0)
     pdf.cell(148, 10, "THE ELITE TECHNICAL DAILY", align="C")
 
-    user_image = "photo_6176981275043284142_w (1) - Copy-photoaidcom-cropped.jpg"
+    user_image = "magazine_cover.jpg"
     if os.path.exists(user_image):
         pdf.image(user_image, x=24, y=65, w=100)
     

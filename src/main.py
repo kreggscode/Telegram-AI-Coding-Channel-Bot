@@ -120,8 +120,9 @@ def post_single_topic(topic_key: str):
 
 def post_daily_magazine():
     """Generate and post the daily magazine PDF"""
-    from .magazine_generator import create_magazine
+    """Generate and post the daily magazine PDF"""
     try:
+        from .magazine_generator import create_magazine
         pdf_path = create_magazine()
         caption = "📖 *KREGGSCODE Daily Magazine*\n\nYour deep-dive into Python, ML, and Architecture. Hand-crafted for the @kreggscode community. Enjoy! 🚀"
         tg.send_document(pdf_path, caption=caption)

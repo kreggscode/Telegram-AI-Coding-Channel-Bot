@@ -5,7 +5,8 @@ on:
     # Optimized for IST (India Standard Time) - 5-6 posts per day including Magazine
     # Posts at: 8:00 AM, 11:00 AM, 2:00 PM, 6:00 PM, 9:00 PM IST
     # Which is: 2:30 AM, 5:30 AM, 8:30 AM, 12:30 PM, 3:30 PM UTC
-    - cron: "30 2,5,8,12,15 * * *"
+    - cron: "30 2 * * *"         # 8:00 AM IST (Magazine)
+    - cron: "30 5,8,12,15 * * *" # Other posts (11 AM, 2 PM, 6 PM, 9 PM)
   workflow_dispatch:  # Allows manual triggering from Actions tab
 
 jobs:
