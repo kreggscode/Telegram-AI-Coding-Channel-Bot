@@ -5,9 +5,14 @@ on:
     # Optimized for IST (India Standard Time) - 5-6 posts per day including Magazine
     # Posts at: 8:00 AM, 11:00 AM, 2:00 PM, 6:00 PM, 9:00 PM IST
     # Which is: 2:30 AM, 5:30 AM, 8:30 AM, 12:30 PM, 3:30 PM UTC
-    - cron: "30 2 * * *"         # 8:00 AM IST (Magazine)
-    - cron: "30 5,8,12,15 * * *" # Other posts (11 AM, 2 PM, 6 PM, 9 PM)
-  workflow_dispatch:  # Allows manual triggering from Actions tab
+    - cron: "40 2 * * *"         # 8:10 AM IST (Magazine) - Shifted to avoid congestion
+    - cron: "30 5,8,12,15 * * *" # Other posts
+  workflow_dispatch:
+    inputs:
+      post_type_override:
+        description: 'Force Post Type (magazine, python, etc)'
+        required: false
+        default: ''
 
 jobs:
   run:
@@ -33,5 +38,6 @@ jobs:
           TIMEZONE_OFFSET_HOURS: ${{ secrets.TIMEZONE_OFFSET_HOURS }}
           POLLINATIONS_API_KEY: ${{ secrets.POLLINATIONS_API_KEY }}
           AI_MODEL: ${{ secrets.AI_MODEL }}
+          POST_TYPE_OVERRIDE: ${{ inputs.post_type_override }}
         run: |
           python -m src.main

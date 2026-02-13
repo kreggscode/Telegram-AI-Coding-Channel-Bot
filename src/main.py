@@ -131,8 +131,16 @@ def post_daily_magazine():
         tg.send_text("Magazine generation failed today. We'll be back tomorrow!")
 
 
+
 def main():
-    post_type = sched.decide_post_type()
+    import os
+    override = os.getenv("POST_TYPE_OVERRIDE")
+    if override and override.strip():
+        post_type = override.strip()
+        print(f"LOG: Manually overriding post type to: {post_type}")
+    else:
+        post_type = sched.decide_post_type()
+    
     print(f"Decided post type: {post_type}")
 
     if post_type == "magazine":
