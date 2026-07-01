@@ -24,9 +24,11 @@ def decide_post_type() -> str:
 
     if 6 <= hour < 10:
         return "magazine"
-    elif 10 <= hour < 13:
+    elif 10 <= hour < 12:
         return "python"
-    elif 13 <= hour < 16:
+    elif 12 <= hour < 14:
+        return "interview"
+    elif 14 <= hour < 16:
         return "javascript"
     elif 16 <= hour < 19:
         return "ml"

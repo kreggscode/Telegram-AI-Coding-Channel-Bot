@@ -1,9 +1,17 @@
+"""
+Magazine Generator - Creates a branded daily magazine PDF
+Uses magazine_cover.jpg as the cover image so each magazine
+is visually identifiable by its unique cover. Each PDF has a unique name.
+"""
 import os
 import random
 from datetime import datetime
 from fpdf import FPDF
 from . import pollinations_client as ai
 from .config import POLLINATIONS_API_KEY
+
+COVER_IMAGE = "magazine_cover.jpg"
+
 
 class CodingMagazine(FPDF):
     def __init__(self):
@@ -13,9 +21,13 @@ class CodingMagazine(FPDF):
 
     def header(self):
         if self.page_no() > 1:
-            self.set_font("helvetica", "I", 8)
-            self.set_text_color(150)
-            self.cell(0, 10, f"KREGGSCODE DAILY JOURNAL - {datetime.now().strftime('%B %d, %Y')}", align="R")
+            self.set_fill_color(20, 40, 100)
+            self.rect(0, 0, 148, 10, "F")
+            self.set_x(0)
+            self.set_y(2)
+            self.set_font("helvetica", "B", 7)
+            self.set_text_color(200, 220, 255)
+            self.cell(148, 6, f"KREGGSCODE DAILY JOURNAL - {datetime.now().strftime('%B %d, %Y')}", align="C")
             self.ln(10)
 
     def footer(self):
@@ -26,12 +38,11 @@ class CodingMagazine(FPDF):
 
     def clean_text(self, text):
         """Ultra-clean text for PDF: removes markdown and special chars"""
-        replacements = [("*", ""), ("#", ""), ("`", ""), ("__", ""), ("- ", "o "), (">", ""), ("_", "")]
-        for old, new in replacements:
+        for old, new in [("*", ""), ("#", ""), ("`", ""), ("__", ""), ("- ", "o "), (">", ""), ("_", "")]:
             text = text.replace(old, new)
         while "\n\n\n" in text:
             text = text.replace("\n\n\n", "\n\n")
-        return text.encode('latin-1', 'ignore').decode('latin-1').strip()
+        return text.encode("latin-1", "ignore").decode("latin-1").strip()
 
     def set_body_font(self):
         self.set_font("helvetica", "", 11.5)
@@ -40,215 +51,188 @@ class CodingMagazine(FPDF):
     def draw_code_box(self, code_text):
         """Renders code in a persistent dark box across page breaks"""
         self.set_font("courier", "B", 8)
-        lines = code_text.strip().split('\n')
+        lines = code_text.strip().split("\n")
         lh = 4.5
-        
-        # Dark background for the whole block area
         self.set_fill_color(20, 22, 30)
         self.set_text_color(140, 210, 255)
-        
         for line in lines:
             if self.get_y() + 10 > 200:
                 self.add_page()
-                
-            safe_line = " " + line.encode('latin-1', 'ignore').decode('latin-1')
-            if len(safe_line) > 60: # Rough limit for A5 width at size 8
+            safe_line = " " + line.encode("latin-1", "ignore").decode("latin-1")
+            if len(safe_line) > 60:
                 safe_line = safe_line[:57] + "..."
-            
-            # Use X=15 to ensure we stay within margins
             self.set_x(15)
-            # Use cell with ln=1 and fill=True for stability
             self.cell(118, lh, safe_line, ln=1, fill=True)
-        
         self.set_text_color(0)
         self.set_body_font()
         self.ln(5)
+
+    def add_cover(self, full_date: str):
+        """Cover page with logo image, title below it, only date shown.
+        All elements are centered to the A5 page (148mm wide)."""
+        self.add_page()
+        # Dark top band (full width, starts at x=0)
+        self.set_fill_color(5, 15, 50)
+        self.rect(0, 0, 148, 32, "F")
+        self.set_xy(0, 6)
+        self.set_font("helvetica", "B", 32)
+        self.set_text_color(255, 255, 255)
+        self.cell(148, 12, "KREGGSCODE", align="C")
+        self.set_xy(0, 20)
+        self.set_font("helvetica", "", 9)
+        self.set_text_color(180, 200, 255)
+        self.cell(148, 5, "THE ELITE TECHNICAL DAILY", align="C")
+
+        # Cover image (centered: x = (148-100)/2 = 24)
+        if os.path.exists(COVER_IMAGE):
+            try:
+                self.image(COVER_IMAGE, x=24, y=36, w=100)
+                content_start = 148
+            except Exception as e:
+                print(f"WARNING: Cover image failed: {e}")
+                content_start = 55
+        else:
+            content_start = 55
+
+        # Title below the image
+        self.set_x(0)
+        self.set_y(content_start)
+        self.set_draw_color(255, 215, 0)
+        self.set_line_width(0.8)
+        self.line(24, self.get_y(), 124, self.get_y())
+        self.ln(7)
+
+        self.set_x(0)
+        self.set_font("helvetica", "B", 18)
+        self.set_text_color(15, 35, 90)
+        self.cell(148, 10, "DAILY TECHNICAL MAGAZINE", align="C")
+        self.ln(14)
+
+        # Date only
+        self.set_x(0)
+        self.set_font("helvetica", "I", 11)
+        self.set_text_color(80)
+        self.cell(148, 7, full_date, align="C")
+        self.ln(12)
+
+        # Divider
+        self.set_draw_color(0, 120, 255)
+        self.set_line_width(0.4)
+        self.line(34, self.get_y(), 114, self.get_y())
+        self.ln(8)
+
+        # Social
+        self.set_x(0)
+        self.set_font("helvetica", "I", 7)
+        self.set_text_color(130)
+        self.cell(148, 5, "Telegram: @kreggscode  |  YouTube: /kreggscode", align="C")
+
 
 def create_magazine():
     print("LOG: Starting Robust Mega-Generation...")
     date_str = datetime.now().strftime("%Y-%m-%d")
     full_date = datetime.now().strftime("%B %d, %Y")
-    
+
     pdf = CodingMagazine()
-    
-    # --- PAGE 1: COVER ---
+
+    # --- PAGE 1: COVER (with magazine_cover.jpg branding) ---
     print("LOG: Designing Elite Cover...")
-    pdf.add_page()
-    pdf.set_y(20)
-    pdf.set_font("helvetica", "B", 46)
-    pdf.set_text_color(20, 40, 100)
-    pdf.set_x(0)
-    pdf.cell(148, 20, "KREGGSCODE", align="C")
-    
-    pdf.set_draw_color(0, 120, 255)
-    pdf.set_line_width(1.5)
-    pdf.line(30, 40, 118, 40)
-    
-    pdf.set_y(45)
-    pdf.set_font("helvetica", "B", 22)
-    pdf.set_text_color(80)
-    pdf.set_x(0)
-    pdf.cell(148, 10, "THE ELITE TECHNICAL DAILY", align="C")
+    pdf.add_cover(full_date)
 
-    user_image = "magazine_cover.jpg"
-    if os.path.exists(user_image):
-        pdf.image(user_image, x=24, y=65, w=100)
-    
-    pdf.set_y(180)
-    pdf.set_font("helvetica", "B", 16)
-    pdf.set_text_color(40)
-    pdf.set_x(0)
-    pdf.cell(148, 10, full_date, align="C")
-    pdf.ln(8)
-    pdf.set_font("helvetica", "I", 12)
-    pdf.set_text_color(100)
-    pdf.set_x(0)
-    pdf.cell(148, 10, "Python Engineering | Distributed AI | Scalable Systems", align="C")
+    # --- SECTORS: AI-Generated Content ---
+    print("LOG: Forging Elite Content Sectors...")
+    sectors = [
+        ("PYTHON", "Generators and Iterators", "Mastering Lazy Evaluation"),
+        ("ML ENGINEERING", "Gradient Descent and Backpropagation", "Optimization Deep Dive"),
+        ("SYSTEM DESIGN", "Microservices Architecture", "Scaling Distributed Systems"),
+        ("CYBER SECURITY", "Zero-Day Vulnerability Analysis", "Advanced Pentesting"),
+    ]
 
-    # --- PAGE 2: EDITOR'S PROLOGUE ---
-    print("LOG: Drafting Editor's Prologue...")
-    pdf.add_page()
-    pdf.set_font("helvetica", "B", 26)
-    pdf.set_text_color(0, 100, 200)
-    pdf.cell(0, 20, "The Director's Desk")
-    pdf.ln(18)
-    
-    intro_p = "Write a sophisticated introduction for KREGGSCODE. Topic: The evolution of code architecture in AI-first engineering. 350 words. PLAIN TEXT. NO ASTERISKS."
-    intro_txt = ai.generate_text(intro_p)
-    if "AI generation failed" in intro_txt:
-        print("WARNING: Intro failed. Using fallback intro.")
-        intro_txt = "Welcome to today's edition. We are exploring the cutting edge of software architecture and AI integration. Stay tuned for deep dives into Python, ML, and Systems."
-        
-    pdf.set_body_font()
-    pdf.set_x(15)
-    pdf.multi_cell(118, 8, pdf.clean_text(intro_txt))
+    for sector_title, topic, subtitle in sectors:
+        print(f"LOG: Generating Content for {sector_title} - {topic}...")
+        pdf.add_page()
+        pdf.set_x(0)
+        pdf.set_font("helvetica", "B", 22)
+        pdf.set_text_color(0, 80, 180)
+        pdf.cell(148, 15, f"{sector_title}", align="C")
+        pdf.ln(12)
+        pdf.set_x(0)
+        pdf.set_font("helvetica", "B", 16)
+        pdf.set_text_color(60)
+        pdf.cell(148, 10, f"Topic: {topic}", align="C")
+        pdf.ln(15)
 
-    # --- DYNAMIC CONTENT POOL ---
-    topic_pool = {
-        "Python Masterclass": [
-            "Memory Management Internals & GC", "Meta-Programming Hooks", "High-Performance Concurrency", 
-            "The Art of C-Extensions", "Bytecode Architecture", "AsyncIO Event Loop Mechanics", 
-            "Metaclasses and Type Creation", "The GIL and Multicore Python", "The Descriptor Protocol Architecture",
-            "Garbage Collection & Cycle Detection", "Memory Slots and __slots__ Internals"
-        ],
-        "Neural Infrastructure": [
-            "Vision & Flash Attention", "Model Quantization & LoRA", "Distributed GPU Training", 
-            "State-Space Model Internals", "RLHF Training Loops", "Transformer Scalability",
-            "Knowledge Distillation", "CUDA Kernel Optimization", "MoE Architecture", "PEFT Architecture"
-        ],
-        "System Architecture": [
-            "Zero-Trust Microservices", "LSM Engine Engineering", "Consensus Protocol Design", 
-            "Kernel-Level Observability", "Vector Database Internals", "Distributed Consensus (Paxos/Raft)",
-            "Scalable Cache Invalidation", "Service Mesh Performance", "Atomic Design Systems"
-        ],
-        "Advanced Engineering": [
-            "Atomic Design Patterns", "Scaling Billions of Requests", "Clean Code in AI Era", 
-            "Post-Quantum Cryptography", "High-Speed Networking", "Clean Code 2.0",
-            "Low-latency Socket Programming", "eBPF Observability Patterns", "Kubernetes Operator Patterns"
-        ]
-    }
+        c = f"Write about {topic} in three parts: (1) Technical Core - how it works at low level (2) Implementation with code snippet (wrap code in [CODE] tags) (3) Production scaling bottlenecks. 400 words total. PLAIN TEXT."
+        t = ai.generate_text(c)
+        if "AI generation failed" in t:
+            t = f"Technical deep-dive on {topic} is being prepared. Check @kreggscode for updates."
 
-    # Select 4 topics per sector for a balanced ~15-20 page magazine
-    selected_sectors = []
-    for sector, all_topics in topic_pool.items():
-        daily_topics = random.sample(all_topics, 2) # Reduced to 2 per sector for speed and stability
-        selected_sectors.append((sector, daily_topics))
-
-    for sector_title, topics in selected_sectors:
-        print(f"LOG: Processing Sector: {sector_title}...")
-        for topic in topics:
-            print(f"LOG: Generating Deep Dive for {topic}...")
-            pdf.add_page()
-            pdf.set_font("helvetica", "B", 22)
-            pdf.set_text_color(0, 80, 180)
-            pdf.cell(0, 15, f"{sector_title}")
-            pdf.ln(10)
-            pdf.set_font("helvetica", "B", 18)
-            pdf.set_text_color(60)
-            pdf.cell(0, 10, f"Topic: {topic}")
-            pdf.ln(15)
-            
-            # Step 1: Technical Core
-            c1 = f"Technical Core of {topic}: Explain how it works at a low level. 300 words. PLAIN TEXT. NO SYMBOLS."
-            t1 = ai.generate_text(c1)
-            if "AI generation failed" in t1: t1 = "Low-level architecture analysis in progress. Contact technical support for deep-dive documentation."
-            
-            pdf.set_body_font()
+        pdf.set_body_font()
+        pdf.set_x(15)
+        if "[CODE]" in t:
+            parts = t.split("[CODE]")
+            pdf.multi_cell(118, 7.5, pdf.clean_text(parts[0]))
+            code_parts = parts[1].split("[/CODE]")
+            pdf.draw_code_box(code_parts[0])
+            if len(code_parts) > 1:
+                pdf.set_x(15)
+                pdf.multi_cell(118, 7.5, pdf.clean_text(code_parts[1]))
+        else:
             pdf.set_x(15)
-            pdf.multi_cell(118, 7.5, pdf.clean_text(t1))
-            pdf.ln(5)
-            
-            # Step 2: Implementation
-            c2 = f"Practical Implementation for {topic}. Provide high-quality logic or code. Wrap code in [CODE] tags. 300 words. PLAIN TEXT."
-            t2 = ai.generate_text(c2)
-            if "AI generation failed" in t2: t2 = "Implementation details are currently being updated in our code repository. Please check @kreggscode for the latest snippets."
-            
-            pdf.set_x(15)
-            if "[CODE]" in t2:
-                parts = t2.split("[CODE]")
-                pdf.multi_cell(118, 7.5, pdf.clean_text(parts[0]))
-                code_parts = parts[1].split("[/CODE]")
-                pdf.draw_code_box(code_parts[0])
-                if len(code_parts) > 1:
-                    pdf.set_x(15)
-                    pdf.multi_cell(118, 7.5, pdf.clean_text(code_parts[1]))
-            else:
-                pdf.multi_cell(118, 7.5, pdf.clean_text(t2))
-            
-            # Step 3: Production Bottlenecks
-            c3 = f"Explain production scaling bottlenecks and optimization strategies for {topic}. 300 words. PLAIN TEXT."
-            t3 = ai.generate_text(c3)
-            if "AI generation failed" in t3: t3 = "Scale-out strategies for this component are part of our upcoming premium architecture series."
-            
-            pdf.set_x(15)
-            pdf.multi_cell(118, 7.5, pdf.clean_text(t3))
-
+            pdf.multi_cell(118, 7.5, pdf.clean_text(t))
 
     # --- COGNITIVE LAB (QUIZZES) ---
     print("LOG: Forging Interactivity Labs...")
-    for i in range(4): # 4 pages of quizzes
-        pdf.add_page()
-        pdf.set_font("helvetica", "B", 24)
-        pdf.set_text_color(200, 0, 0)
-        pdf.cell(0, 20, f"The Cognitive Lab: Set {i+1}")
-        pdf.ln(15)
-        
-        q_p = "Create 4 elite technical MCQ questions (A-D) about the architectural topics discussed. Include detailed answers. 400 words. PLAIN TEXT. NO ASTERISKS."
-        q_txt = ai.generate_text(q_p)
-        if "AI generation failed" in q_txt:
-            q_txt = "Quizzes for this edition are being calibrated for higher difficulty. Please check @kreggscode for our weekend challenge!"
-            
-        pdf.set_body_font()
-        pdf.set_x(15)
-        pdf.multi_cell(118, 8, pdf.clean_text(q_txt))
+    pdf.add_page()
+    pdf.set_x(0)
+    pdf.set_font("helvetica", "B", 24)
+    pdf.set_text_color(200, 0, 0)
+    pdf.cell(148, 20, "The Cognitive Lab", align="C")
+    pdf.ln(15)
+
+    q_p = "Create 4 elite technical MCQ questions (A-D) about software architecture, Python, and ML. Include detailed answers. 400 words. PLAIN TEXT. NO ASTERISKS."
+    q_txt = ai.generate_text(q_p)
+    if "AI generation failed" in q_txt:
+        q_txt = "Quizzes for this edition are being calibrated. Check @kreggscode for our weekend challenge!"
+
+    pdf.set_body_font()
+    pdf.set_x(15)
+    pdf.multi_cell(118, 8, pdf.clean_text(q_txt))
 
     # --- FINAL: SOCIAL ACCESS ---
-    print("LOG: Finalizing Access Channels...")
     print("LOG: Finalizing Access Channels...")
     pdf.add_page()
     pdf.set_fill_color(240, 245, 255)
     pdf.rect(0, 0, 148, 210, "F")
-    
+    pdf.set_x(0)
     pdf.set_y(60)
     pdf.set_font("helvetica", "B", 42)
     pdf.set_text_color(20, 40, 100)
-    pdf.cell(0, 20, "KREGGSCODE", align="C")
-    pdf.ln(45)
-    
+    pdf.cell(148, 20, "KREGGSCODE", align="C")
+
+    # Re-show the cover image on the last page
+    if os.path.exists(COVER_IMAGE):
+        try:
+            pdf.image(COVER_IMAGE, x=44, y=85, w=60)
+        except Exception:
+            pass
+
+    pdf.ln(55)
     socials = [
         ("INSTAGRAM", "@kreggscode", "https://instagram.com/kreggscode"),
         ("YOUTUBE", "/kreggscode", "https://youtube.com/@kreggscode"),
-        ("TELEGRAM", "t.me/kreggscode", "https://t.me/kreggscode")
+        ("TELEGRAM", "t.me/kreggscode", "https://t.me/kreggscode"),
     ]
-    
     for platform, handle, link in socials:
+        pdf.set_x(0)
         pdf.set_font("helvetica", "B", 12)
         pdf.set_text_color(0, 100, 220)
-        pdf.cell(0, 8, platform, align="C")
+        pdf.cell(148, 8, platform, align="C")
         pdf.ln(10)
+        pdf.set_x(0)
         pdf.set_font("helvetica", "B", 20)
         pdf.set_text_color(40)
-        pdf.cell(0, 12, handle, align="C", link=link)
+        pdf.cell(148, 12, handle, align="C", link=link)
         pdf.ln(25)
 
     out_file = f"KREGGSCODE_Premium_{date_str}.pdf"
@@ -256,12 +240,13 @@ def create_magazine():
     print(f"LOG: Successfully saved to {out_file}")
     return out_file
 
+
 def download_image(url, filename):
     import requests
     try:
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
-            with open(filename, 'wb') as f:
+            with open(filename, "wb") as f:
                 f.write(response.content)
             return True
     except Exception as e:

@@ -55,7 +55,8 @@ def post_single_topic(topic_key: str):
         "python": ("Python Mastery", TEXT_TEMPLATES["python_tip"]),
         "javascript": ("JS Pro", TEXT_TEMPLATES["js_tip"]),
         "ml": ("ML Engineering", TEXT_TEMPLATES["ml_tip"]),
-        "security": ("Cyber Security", TEXT_TEMPLATES["security_tip"])
+        "security": ("Cyber Security", TEXT_TEMPLATES["security_tip"]),
+        "interview": ("Interview Prep", TEXT_TEMPLATES["interview_tip"])
     }
     
     if topic_key not in topic_map:
@@ -105,15 +106,33 @@ def post_single_topic(topic_key: str):
             except Exception as pe:
                 print(f"WARNING: Quiz parsing error: {pe}")
 
+        # Generate Notes PDF with branding
+        from .templates import get_current_day
+        from .notes_generator import generate_notes
+        day = get_current_day()
+        try:
+            pdf_path = generate_notes(topic_key, day, main_text)
+            print(f"LOG: Sending Notes PDF to Telegram...")
+            tg.send_document(pdf_path, caption=f"📄 *{name} - Notes (Day {day})*\n\n@kreggscode")
+        except Exception as e:
+            print(f"WARNING: Notes PDF generation failed (non-fatal): {e}")
+        
         # Send Content
-        tg.send_text(main_text)
+        resp1 = tg.send_text(main_text)
         
         # Send Quiz if available
+        quiz_ok = True
         if quiz_data:
             print(f"LOG: Sending Quiz for {name}...")
-            tg.send_quiz(**quiz_data)
-            
-        print(f"SUCCESS: {name} posted.")
+            resp2 = tg.send_quiz(**quiz_data)
+            quiz_ok = resp2 is not None and resp2.status_code == 200
+        
+        text_ok = resp1 is not None and resp1.status_code == 200
+        
+        if text_ok and quiz_ok:
+            print(f"SUCCESS: {name} posted.")
+        else:
+            print(f"WARNING: {name} - text_ok={text_ok}, quiz_ok={quiz_ok} - check Telegram API errors above")
     except Exception as e:
         print(f"ERROR: Exception generating {name}: {e}")
 
@@ -145,6 +164,8 @@ def main():
 
     if post_type == "magazine":
         post_daily_magazine()
+    elif post_type == "interview":
+        post_single_topic(post_type)
     elif post_type in ["python", "javascript", "ml", "security"]:
         post_single_topic(post_type)
     elif post_type == "tech_bundle":

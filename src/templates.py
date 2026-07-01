@@ -121,11 +121,41 @@ def get_security_prompt():
     )
 
 
+def get_interview_prompt():
+    day = get_current_day()
+    topics = [
+        "Data Structures & Algorithms", "System Design", "Behavioral Questions", 
+        "Operating Systems", "Database Design", "Object-Oriented Design",
+        "Distributed Systems", "Concurrency & Parallelism", "API Design & REST",
+        "Dynamic Programming", "Tree & Graph Algorithms", "Sorting & Searching",
+        "Design Patterns", "Microservices Architecture", "SQL vs NoSQL",
+        "Caching Strategies", "Load Balancing", "CAP Theorem & Consistency",
+        "Message Queues & Event-Driven Architecture", "Containerization & Docker"
+    ]
+    topic = random.choice(topics)
+    return (
+        f"Today is Day {day} of the Interview Prep Series. Topic: {topic}. "
+        "Create a technical interview question and answer (200 words max) including:\n"
+        "1. Header: **💼 Interview Prep: Day [X] - [Topic]**\n"
+        "2. A realistic interview question that a FAANG company would ask.\n"
+        "3. A step-by-step approach to solve it.\n"
+        "4. A [QUIZ] section exactly in this format:\n"
+        "[QUIZ]\n"
+        "Question: [A quick knowledge check related to this topic]\n"
+        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Correct: [Index 0-3]\n"
+        "Explanation: [Brief explanation of why it is correct]\n"
+        "[/QUIZ]\n"
+        "STRICT: Focus on real interview scenarios. Be practical and detailed."
+    )
+
+
 TEXT_TEMPLATES = {
     "python_tip": get_python_prompt,
     "js_tip": get_js_prompt,
     "ml_tip": get_ml_prompt,
     "security_tip": get_security_prompt,
+    "interview_tip": get_interview_prompt,
     "tech_news": (
         "Write a short tech/coding news update with this EXACT format:\n\n"
         "**📰 Tech News: [Headline]**\n\n"

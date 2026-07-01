@@ -13,7 +13,19 @@ def send_text(text: str):
     }
     resp = requests.post(url, data=data)
     if resp.status_code != 200:
-        print(f"ERROR: Telegram sendMessage failed ({resp.status_code}): {resp.text}")
+        print(f"ERROR: Telegram sendMessage failed ({resp.status_code}): {resp.text[:200]}")
+        # Retry without Markdown if parsing error
+        if resp.status_code == 400:
+            print("LOG: Retrying without Markdown parsing...")
+            data["parse_mode"] = ""
+            resp2 = requests.post(url, data=data)
+            if resp2.status_code == 200:
+                print("LOG: Message sent without Markdown (plain text)")
+                return resp2
+            else:
+                print(f"ERROR: Retry also failed ({resp2.status_code}): {resp2.text[:200]}")
+    else:
+        print(f"LOG: Message sent successfully to Telegram")
     return resp
 
 
