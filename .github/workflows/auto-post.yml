@@ -2,17 +2,18 @@ name: Telegram AI Auto Poster
 
 on:
   schedule:
-    # Optimized for IST (India Standard Time) - 5-6 posts per day including Magazine
-    # 6 posts per day (IST):
-    #   8:10 AM  → Magazine
-    #   11:00 AM → Python
-    #   1:00 PM  → Interview Prep 🆕
-    #   2:00 PM  → JavaScript
-    #   6:00 PM  → ML Engineering
-    #   9:00 PM  → Cyber Security
-    # UTC equivalents: 2:40, 5:30, 7:30, 8:30, 12:30, 15:30
+    # Optimized for IST (India Standard Time) - 6 posts per day including Magazine
+    # UTC equivalents:
+    #   2:40 UTC =  8:10 AM IST → Magazine
+    #   5:30 UTC = 11:00 AM IST → Python
+    #   7:30 UTC =  1:00 PM IST → Interview Prep
+    #   8:30 UTC =  2:00 PM IST → JavaScript
+    #  12:30 UTC =  6:00 PM IST → ML Engineering
+    #  15:30 UTC =  9:00 PM IST → Cyber Security
     - cron: "40 2 * * *"             # 8:10 AM IST (Magazine)
     - cron: "30 5,7,8,12,15 * * *"   # Python, Interview, JS, ML, Security
+    # Wake-up every 6h to prevent GitHub from sleeping the cron scheduler
+    - cron: "0 */6 * * *"             # Keep cron active
   workflow_dispatch:
     inputs:
       post_type_override:
