@@ -1,7 +1,29 @@
 from . import pollinations_client as ai
 from . import telegram_client as tg
 from . import scheduler_logic as sched
-from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES
+from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES, HASHTAGS
+
+CURRENT_POST_TYPE = None
+
+# Wrap tg.send_text to automatically append hashtags based on CURRENT_POST_TYPE
+_original_send_text = tg.send_text
+def custom_send_text(text, parse_mode="Markdown"):
+    global CURRENT_POST_TYPE
+    if CURRENT_POST_TYPE and CURRENT_POST_TYPE != "thread":
+        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
+        text = text + tags
+    return _original_send_text(text, parse_mode)
+tg.send_text = custom_send_text
+
+# Wrap tg.send_document to automatically append hashtags based on CURRENT_POST_TYPE
+_original_send_document = tg.send_document
+def custom_send_document(document_path, caption=""):
+    global CURRENT_POST_TYPE
+    if CURRENT_POST_TYPE:
+        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
+        caption = caption + tags
+    return _original_send_document(document_path, caption)
+tg.send_document = custom_send_document
 
 print("LOG: Bot Intelligence v2.1 Activated")
 
@@ -152,6 +174,7 @@ def post_daily_magazine():
 
 
 def main():
+    global CURRENT_POST_TYPE
     import os
     override = os.getenv("POST_TYPE_OVERRIDE")
     if override and override.strip():
@@ -161,6 +184,7 @@ def main():
         post_type = sched.decide_post_type()
     
     print(f"Decided post type: {post_type}")
+    CURRENT_POST_TYPE = post_type
 
     if post_type == "magazine":
         post_daily_magazine()

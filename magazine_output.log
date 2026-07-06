@@ -1,0 +1,2 @@
+/home/kregg/.local/lib/python3.12/site-packages/fpdf/fpdf.py:253: UserWarning: Dimensions for page format A5 were fixed in release 2.8.5
+  warnings.warn(

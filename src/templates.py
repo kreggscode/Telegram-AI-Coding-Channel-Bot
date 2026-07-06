@@ -196,3 +196,16 @@ IMAGE_TEMPLATES = {
     "tech_news": "futuristic tech news broadcast, holographic displays, cyberpunk style, vibrant colors, high detail",
     "clean_code": "before and after code comparison, split screen, one side messy one side clean, minimalist illustration",
 }
+
+HASHTAGS = {
+    "python": "\n\n#Python #Coding #Programming #SoftwareEngineering #PythonProgramming #LearnPython #WebDevelopment",
+    "javascript": "\n\n#JavaScript #WebDev #Coding #Programming #Frontend #JS #SoftwareEngineering #ReactJS",
+    "ml": "\n\n#MachineLearning #ArtificialIntelligence #DataScience #Python #ML #DeepLearning #Coding #AI",
+    "security": "\n\n#CyberSecurity #EthicalHacking #BugBounty #InfoSec #PenetrationTesting #Hacking #Security",
+    "interview": "\n\n#InterviewPrep #SoftwareEngineer #CodingInterviews #FAANG #LeetCode #CareerInTech #SystemDesign",
+    "tech_bundle": "\n\n#Coding #Programming #Python #JavaScript #CyberSecurity #MachineLearning #WebDevelopment #SoftwareEngineering",
+    "magazine": "\n\n#TechMagazine #SoftwareArchitecture #Programming #Coding #Python #MachineLearning #WebDev",
+    "tech_news": "\n\n#TechNews #ProgrammingNews #SoftwareEngineering #TechUpdates #DeveloperLife",
+    "thread": "\n\n#CodingThread #DeepDive #SoftwareEngineering #LearnToCode #ProgrammingTips",
+    "poll": "\n\n#CodingQuiz #ProgrammingPoll #Trivia #DeveloperQuiz"
+}
