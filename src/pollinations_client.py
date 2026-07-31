@@ -72,14 +72,6 @@ def generate_text(prompt: str) -> str:
 
 
 def image_url(prompt: str, model: str = "flux") -> str:
-    """Return an image URL from Pollinations based on prompt with authorization."""
-    seed = random.randint(1000, 999999)
-    encoded = urllib.parse.quote(prompt)
-    
-    # Using the gen.pollinations.ai endpoint for paid image generation if needed
-    # but the simple URL works too if the key is passed as a query param
-    # Authenticated URL format: https://gen.pollinations.ai/image/{prompt}?key={key}&model={model}&seed={seed}
-    
-    base_url = "https://gen.pollinations.ai/image"
-    auth_query = f"&key={POLLINATIONS_API_KEY}" if POLLINATIONS_API_KEY else ""
-    return f"{base_url}/{encoded}?model={model}&seed={seed}{auth_query}&nologo=true"
+    """Image generation DISABLED to stop Pollinations flux image costs."""
+    print("--- POLLINATIONS IMAGE GENERATION DISABLED ---")
+    return None
