@@ -27,7 +27,7 @@ jobs:
           git rm -rf . > /dev/null 2>&1 || true
           
           # Write single heartbeat timestamp
-          echo "Heartbeat: " > .heartbeat
+          echo "Heartbeat: $(date -u)" > .heartbeat
           git add .heartbeat
           git commit -m "chore(heartbeat): repository activity [skip ci]"
           
