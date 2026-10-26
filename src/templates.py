@@ -2,7 +2,7 @@ from datetime import datetime
 import random
 from .config import COURSE_START_DATE
 
-print("LOG: Using Templates Engine v2.2 (SEO & High-Performance Formatting)")
+print("LOG: Using Templates Engine v2.3 (LeetCode POTD, Executive PDFs & SEO)")
 
 
 def get_current_day():
@@ -34,6 +34,25 @@ PYTHON_TOPICS = [
     "Algorithm Complexity & Memory Profiling (tracemalloc)",
     "Design Patterns: Factory, Singleton & Observer in Python",
     "Functional Programming: functools (lru_cache, partial)"
+]
+
+LEETCODE_TOPICS = [
+    "Two Sum & HashMap Lookup (O(N) Optimal Strategy)",
+    "Best Time to Buy and Sell Stock (Kadane's & Single Pass)",
+    "LRU Cache Architecture (Doubly Linked List + HashMap)",
+    "Trapping Rain Water (Two-Pointer vs Monotonic Stack)",
+    "Longest Substring Without Repeating Characters (Sliding Window)",
+    "Reverse Linked List (Iterative Pointer Manipulation vs Recursion)",
+    "Merge Intervals & Overlapping Range Optimization",
+    "Binary Tree Level Order Traversal (BFS & Queue Optimization)",
+    "Word Break & Dynamic Programming Tabulation",
+    "Coin Change Problem (Unbounded Knapsack DP)",
+    "Course Schedule & Topological Sort (Kahn's Algorithm)",
+    "Kth Largest Element in an Array (Min-Heap vs QuickSelect)",
+    "Median of Two Sorted Arrays (Binary Search on Partition)",
+    "Number of Islands & Connected Components (DFS Grid Traversal)",
+    "Valid Parentheses & Monotonic Stack Evaluation",
+    "Search in Rotated Sorted Array (Modified Binary Search)"
 ]
 
 JS_TOPICS = [
@@ -117,11 +136,39 @@ def get_python_prompt():
         "• Pitfall: [Common mistake/anti-pattern to avoid]\n\n"
         "[QUIZ]\n"
         "Question: [A clear knowledge-check multiple choice question]\n"
-        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Options: [Option A] | [Option B] | [Option C] | [Option D]\n"
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "Keep the text punchy, technical, and educational."
+        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
+    )
+
+
+def get_leetcode_prompt():
+    day = get_current_day()
+    topic = random.choice(LEETCODE_TOPICS)
+    return (
+        f"Today is Day {day} of the FAANG LeetCode Problem of the Day. Problem Focus: {topic}.\n\n"
+        "Create an elite, interview-ready LeetCode deep-dive in Markdown with this EXACT structure:\n\n"
+        f"**🧩 LeetCode POTD: Day {day} - {topic}**\n\n"
+        "💡 **Problem & Algorithmic Strategy:**\n"
+        "Explain the core algorithmic pattern (2-3 concise paragraphs): why brute force fails, how senior engineers identify the optimal approach (e.g. Two-Pointer, Sliding Window, Monotonic Stack, or DP), and key constraints.\n\n"
+        "💻 **Optimal Solution (Python):**\n"
+        "Provide the complete, 100% runnable, optimal solution. CRITICAL REQUIREMENTS:\n"
+        "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- NEVER use placeholders or ellipses like '# ...'. Write genuine working logic.\n"
+        "- Specify Time Complexity (e.g. O(N)) and Space Complexity (e.g. O(1)) in comments.\n"
+        "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the Copy Code button.\n\n"
+        "⚡ **FAANG Interview Tips:**\n"
+        "• Reusable Pattern: [How to apply this pattern to similar LeetCode problems]\n"
+        "• Edge Case: [Critical edge case interviewers test for]\n\n"
+        "[QUIZ]\n"
+        "Question: [A question testing algorithmic complexity or edge case for this problem]\n"
+        "Options: [Option A] | [Option B] | [Option C] | [Option D]\n"
+        "Correct: [Index 0-3]\n"
+        "Explanation: [Concise 1-2 sentence explanation of why this is correct]\n"
+        "[/QUIZ]\n\n"
+        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -145,11 +192,11 @@ def get_js_prompt():
         "• Pitfall: [Common mistake/anti-pattern to avoid]\n\n"
         "[QUIZ]\n"
         "Question: [A clear knowledge-check multiple choice question]\n"
-        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Options: [Option A] | [Option B] | [Option C] | [Option D]\n"
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "Keep the text punchy, technical, and educational."
+        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -173,11 +220,11 @@ def get_ml_prompt():
         "• Pitfall: [Common mistake/anti-pattern to avoid]\n\n"
         "[QUIZ]\n"
         "Question: [A clear knowledge-check multiple choice question]\n"
-        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Options: [Option A] | [Option B] | [Option C] | [Option D]\n"
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "Keep the text punchy, technical, and educational."
+        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -201,11 +248,11 @@ def get_security_prompt():
         "• Defensive Hardening: [How architects patch it securely]\n\n"
         "[QUIZ]\n"
         "Question: [A clear knowledge-check multiple choice question]\n"
-        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Options: [Option A] | [Option B] | [Option C] | [Option D]\n"
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "Keep the text punchy, technical, and educational."
+        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -229,16 +276,17 @@ def get_interview_prompt():
         "• Follow-up: [Typical follow-up question interviewers ask]\n\n"
         "[QUIZ]\n"
         "Question: [A quick conceptual knowledge check related to this interview problem]\n"
-        "Options: [Option A], [Option B], [Option C], [Option D]\n"
+        "Options: [Option A] | [Option B] | [Option C] | [Option D]\n"
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of why this answer is correct]\n"
         "[/QUIZ]\n\n"
-        "Keep the text punchy, technical, and educational."
+        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
 TEXT_TEMPLATES = {
     "python_tip": get_python_prompt,
+    "leetcode_tip": get_leetcode_prompt,
     "js_tip": get_js_prompt,
     "ml_tip": get_ml_prompt,
     "security_tip": get_security_prompt,
@@ -286,14 +334,15 @@ IMAGE_TEMPLATES = {
 
 # SEO-Optimized Targeted Hashtags for Maximum Discoverability in Telegram Search & Google SERP
 HASHTAGS = {
-    "python": "\n\n#Python #LearnPython #PythonProgramming #SoftwareEngineering #CodeSnippet #Developer #CodingTips #PythonProjects",
-    "javascript": "\n\n#JavaScript #TypeScript #WebDevelopment #Frontend #NodeJS #ReactJS #SoftwareEngineering #CodingCommunity",
-    "ml": "\n\n#MachineLearning #ArtificialIntelligence #DataScience #DeepLearning #PythonML #PyTorch #AIEngineering #BigData",
-    "security": "\n\n#CyberSecurity #EthicalHacking #BugBounty #InfoSec #PenetrationTesting #NetworkSecurity #AppSec #Coding",
-    "interview": "\n\n#CodingInterview #FAANG #LeetCode #SystemDesign #SoftwareEngineer #DataStructures #Algorithms #TechCareers",
-    "tech_bundle": "\n\n#SoftwareEngineering #Python #JavaScript #MachineLearning #CyberSecurity #CodingCheatSheet #TechMastery",
-    "magazine": "\n\n#TechMagazine #SoftwareArchitecture #CodeEngineering #ProgrammingDaily #ComputerScience #TechJournal",
-    "tech_news": "\n\n#TechNews #ProgrammingNews #SoftwareEngineering #AIUpdates #DeveloperLife #TechTrends",
-    "thread": "\n\n#TechDeepDive #CodingThread #ComputerScience #SoftwareArchitecture #LearnToCode #DeveloperTips",
-    "poll": "\n\n#CodingQuiz #ProgrammingChallenge #DeveloperTrivia #SoftwareEngineer #TechPoll"
+    "python": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #Python #LearnPython #PythonProgramming #SoftwareEngineering #CodeSnippet #Developer #CodingTips #PythonProjects",
+    "leetcode": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #LeetCode #DSA #CodingInterview #FAANG #Algorithms #DataStructures #Python #ProblemOfTheDay #TechInterview #SoftwareEngineer",
+    "javascript": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #JavaScript #TypeScript #WebDevelopment #Frontend #NodeJS #ReactJS #SoftwareEngineering #CodingCommunity",
+    "ml": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #MachineLearning #ArtificialIntelligence #DataScience #DeepLearning #PythonML #PyTorch #AIEngineering #BigData",
+    "security": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #CyberSecurity #EthicalHacking #BugBounty #InfoSec #PenetrationTesting #NetworkSecurity #AppSec #Coding",
+    "interview": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #CodingInterview #FAANG #LeetCode #SystemDesign #SoftwareEngineer #DataStructures #Algorithms #TechCareers",
+    "tech_bundle": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #SoftwareEngineering #Python #JavaScript #MachineLearning #CyberSecurity #CodingCheatSheet #TechMastery",
+    "magazine": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #TechMagazine #SoftwareArchitecture #CodeEngineering #ProgrammingDaily #ComputerScience #TechJournal",
+    "tech_news": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #TechNews #ProgrammingNews #SoftwareEngineering #AIUpdates #DeveloperLife #TechTrends",
+    "thread": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #TechDeepDive #CodingThread #ComputerScience #SoftwareArchitecture #LearnToCode #DeveloperTips",
+    "poll": "\n\n━━━━━━━━━━━━━━━━━━━━\n🏷️ #CodingQuiz #ProgrammingChallenge #DeveloperTrivia #SoftwareEngineer #TechPoll"
 }

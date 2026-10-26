@@ -1,178 +1,216 @@
 """
-Notes Generator - Creates a branded PDF notes page for each daily post
-Uses magazine_cover.jpg as the cover branding image so every PDF
-is visually identifiable by its cover. Each PDF has a unique filename.
+Modern Executive Notes Generator.
+Produces publication-grade, Silicon-Valley-style technical cheat sheets
+with clean header banners, terminal-style dark code containers,
+structured takeaway cards, and zero overflow bugs.
 """
+
 import os
+import re
 from datetime import datetime
 from fpdf import FPDF
+from fpdf.enums import XPos, YPos
 
 COVER_IMAGE = "magazine_cover.jpg"
 
 
-class NotesPDF(FPDF):
+class ModernNotesPDF(FPDF):
     def __init__(self, post_type: str, day: int):
         super().__init__(format="A4", unit="mm")
-        self.set_margins(20, 20, 20)
-        self.set_auto_page_break(True, margin=25)
+        self.set_margins(15, 15, 15)
+        self.set_auto_page_break(True, margin=18)
         self.post_type = post_type
         self.day = day
         self.full_date = datetime.now().strftime("%B %d, %Y")
 
         self.type_labels = {
             "python": "PYTHON MASTERY",
-            "javascript": "JAVASCRIPT PRO",
-            "ml": "ML ENGINEERING",
-            "security": "CYBER SECURITY",
-            "interview": "INTERVIEW PREP",
-            "magazine": "DAILY MAGAZINE",
+            "leetcode": "LEETCODE PROBLEM OF THE DAY",
+            "javascript": "JAVASCRIPT & TS PRO",
+            "ml": "AI / ML ENGINEERING",
+            "security": "CYBER SECURITY & BUG BOUNTY",
+            "interview": "FAANG INTERVIEW PREP",
+            "magazine": "TECHNICAL JOURNAL",
         }
-        self.titles = {
-            "python": "Python Mastery - Advanced Concepts",
-            "javascript": "JavaScript Pro - Modern JS Patterns",
-            "ml": "ML Engineering - AI & Machine Learning",
-            "security": "Cyber Security - Bug Bounty & Pentesting",
-            "interview": "Interview Prep - Technical Questions",
-            "magazine": "Daily Technical Magazine",
+        self.track_colors = {
+            "python": (15, 76, 129),     # Deep Python Blue
+            "leetcode": (220, 110, 40),   # LeetCode Orange
+            "javascript": (195, 140, 20), # JS Warm Gold
+            "ml": (114, 9, 183),         # AI Purple
+            "security": (180, 35, 40),    # Cyber Red
+            "interview": (35, 95, 130),   # Slate Blue
         }
+
+    def clean_text_for_pdf(self, text: str) -> str:
+        """Convert Unicode symbols, smart quotes, and dashes to clean Latin-1 characters."""
+        replacements = [
+            ("“", '"'), ("”", '"'), ("‘", "'"), ("’", "'"),
+            ("—", "-"), ("–", "-"), ("•", "*"), ("→", "->"),
+            ("💡", "[CONCEPT] "), ("💻", "[CODE] "), ("⚡", "[PRO-TIP] "),
+            ("🐍", ""), ("🤖", ""), ("🔓", ""), ("💼", ""), ("🧩", ""),
+            ("**", ""), ("__", ""), ("#", "")
+        ]
+        for old, new in replacements:
+            text = text.replace(old, new)
+        return text.encode("latin-1", "replace").decode("latin-1")
 
     def header(self):
-        if self.page_no() > 1:
-            self.set_fill_color(20, 40, 100)
-            self.rect(0, 0, 210, 12, "F")
-            self.set_x(0)
-            self.set_y(2)
-            self.set_font("helvetica", "B", 8)
-            self.set_text_color(200, 220, 255)
-            self.cell(105, 8, "KREGGSCODE ELITE NOTES", align="L")
-            self.set_font("helvetica", "I", 7)
-            self.cell(105, 8, self.full_date, align="R")
-            self.ln(10)
+        # Top Modern Banner
+        primary_color = self.track_colors.get(self.post_type, (15, 30, 80))
+        self.set_fill_color(*primary_color)
+        self.rect(0, 0, 210, 24, "F")
+
+        # Accent Stripe
+        self.set_fill_color(0, 180, 216)
+        self.rect(0, 24, 210, 1.5, "F")
+
+        # Header Title
+        self.set_xy(15, 4)
+        self.set_font("helvetica", "B", 13)
+        self.set_text_color(255, 255, 255)
+        label = self.type_labels.get(self.post_type, "KREGGSCODE ELITE")
+        self.cell(120, 8, f"KREGGSCODE  |  {label}")
+
+        # Subtitle / Day
+        self.set_xy(15, 13)
+        self.set_font("helvetica", "", 8)
+        self.set_text_color(200, 225, 255)
+        self.cell(120, 5, f"DAY {self.day}  *  OFFICIAL TECHNICAL REFERENCE  *  {self.full_date.upper()}")
+
+        # Right-side Community Tag
+        self.set_xy(135, 6)
+        self.set_font("helvetica", "B", 9.5)
+        self.set_text_color(255, 215, 0)  # Gold
+        self.cell(60, 6, "TELEGRAM: @kreggscode", align="R")
+
+        self.set_xy(135, 13)
+        self.set_font("helvetica", "I", 7.5)
+        self.set_text_color(220, 230, 255)
+        self.cell(60, 5, "github.com/kreggscode", align="R")
+
+        self.set_y(32)
 
     def footer(self):
-        self.set_y(-15)
-        self.set_font("helvetica", "I", 8)
-        self.set_text_color(130)
-        self.cell(0, 10, f"Page {self.page_no()} | KREGGSCODE ELITE | {self.full_date}", align="C")
+        self.set_y(-14)
+        self.set_draw_color(200, 210, 225)
+        self.set_line_width(0.3)
+        self.line(15, self.get_y(), 195, self.get_y())
 
-    def clean_text(self, text):
-        """Clean markdown for PDF display"""
-        for old, new in [("**", ""), ("*", ""), ("#", ""), ("`", ""), ("__", ""), ("_", ""), (">", "")]:
-            text = text.replace(old, new)
-        while "\n\n\n" in text:
-            text = text.replace("\n\n\n", "\n\n")
-        return text.encode("latin-1", "ignore").decode("latin-1").strip()
+        self.set_y(-12)
+        self.set_font("helvetica", "I", 7.5)
+        self.set_text_color(120, 130, 145)
+        self.cell(90, 6, "KREGGSCODE Elite Architecture  |  Free Educational Reference", align="L")
+        self.cell(90, 6, f"Page {self.page_no()}  |  Join: t.me/kreggscode", align="R")
 
-    def add_cover(self):
-        """Branded cover: title below the logo image, only date shown.
-        All elements perfectly centered on the A4 page (210mm wide)."""
-        self.add_page()
+    def draw_code_box(self, code_text: str, language: str = "python"):
+        """Render code in a dark terminal-style container box."""
+        lines = code_text.strip().split("\n")
 
-        # --- TOP BAND (full page width) ---
-        self.set_fill_color(5, 15, 50)
-        self.rect(0, 0, 210, 38, "F")
-        self.set_xy(0, 8)
-        self.set_font("helvetica", "B", 26)
-        self.set_text_color(255, 255, 255)
-        self.cell(210, 10, "KREGGSCODE", align="C")
-        self.set_xy(0, 22)
-        self.set_font("helvetica", "", 9)
-        self.set_text_color(180, 200, 255)
-        self.cell(210, 5, "ELITE TECHNICAL DAILY", align="C")
+        # Terminal header bar
+        self.set_fill_color(30, 32, 44)
+        self.rect(15, self.get_y(), 180, 7, "F")
+        self.set_xy(18, self.get_y() + 1)
+        self.set_font("courier", "B", 7.5)
+        self.set_text_color(160, 170, 190)
+        self.cell(174, 5, f"[terminal: {language}]", align="L")
+        self.ln(6)
 
-        # --- COVER IMAGE (centered: x = (210-100)/2 = 55) ---
-        label = self.type_labels.get(self.post_type, self.post_type.upper())
-        img_y = 42
+        # Code block body
+        line_height = 4.6
+        self.set_fill_color(22, 24, 34)
+        self.set_font("courier", "", 8.5)
+        self.set_text_color(166, 227, 161)  # Terminal Green/Cyan
 
-        if os.path.exists(COVER_IMAGE):
-            try:
-                self.image(COVER_IMAGE, x=55, y=img_y, w=100)
-                content_start = img_y + 108
-            except Exception as e:
-                print(f"WARNING: Cover image failed: {e}")
-                content_start = img_y + 5
-        else:
-            content_start = img_y + 5
+        for line in lines:
+            if self.get_y() + line_height > 275:
+                self.add_page()
+            safe_line = "  " + self.clean_text_for_pdf(line)
+            if len(safe_line) > 85:
+                safe_line = safe_line[:82] + "..."
+            self.set_x(15)
+            self.cell(180, line_height, safe_line, fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
-        # --- TITLE BELOW THE LOGO IMAGE ---
-        self.set_x(0)
-        self.set_y(content_start)
-        self.set_draw_color(255, 215, 0)
-        self.set_line_width(0.8)
-        self.line(55, self.get_y(), 155, self.get_y())
+        self.ln(4)
+
+    def add_section_header(self, title: str):
+        self.ln(2)
+        self.set_fill_color(235, 243, 250)
+        self.rect(15, self.get_y(), 180, 7, "F")
+
+        # Left accent pill
+        primary_color = self.track_colors.get(self.post_type, (15, 76, 129))
+        self.set_fill_color(*primary_color)
+        self.rect(15, self.get_y(), 2.5, 7, "F")
+
+        self.set_xy(19, self.get_y() + 1)
+        self.set_font("helvetica", "B", 9.5)
+        self.set_text_color(*primary_color)
+        self.cell(170, 5, self.clean_text_for_pdf(title).upper(), align="L")
         self.ln(7)
 
-        self.set_x(0)
-        self.set_font("helvetica", "B", 22)
-        self.set_text_color(15, 35, 90)
-        self.cell(210, 11, label, align="C")
-        self.ln(14)
-
-        # --- DATE ONLY ---
-        self.set_x(0)
-        self.set_font("helvetica", "I", 11)
-        self.set_text_color(80)
-        self.cell(210, 6, self.full_date, align="C")
-        self.ln(14)
-
-        # --- DIVIDER ---
-        self.set_draw_color(0, 120, 255)
-        self.set_line_width(0.4)
-        self.line(65, self.get_y(), 145, self.get_y())
-        self.ln(8)
-
-        # --- SOCIAL FOOTER ---
-        self.set_x(0)
-        self.set_font("helvetica", "", 8)
-        self.set_text_color(130)
-        self.cell(210, 5, "Built for the KREGGSCODE Community", align="C")
-        self.ln(4)
-        self.set_x(0)
-        self.cell(210, 5, "Telegram: @kreggscode  |  YouTube: /kreggscode", align="C")
-
-    def add_content(self, title: str, content: str):
-        """Add content page with proper formatting"""
+    def render_cheat_sheet(self, title: str, content: str):
         self.add_page()
-        self.set_font("helvetica", "B", 18)
-        self.set_text_color(20, 40, 100)
-        self.multi_cell(0, 10, title)
+
+        # Document Main Title
+        self.set_font("helvetica", "B", 15)
+        self.set_text_color(20, 30, 55)
+        self.multi_cell(180, 7.5, self.clean_text_for_pdf(title))
         self.ln(3)
-        self.set_draw_color(0, 120, 255)
-        self.set_line_width(0.6)
-        self.line(20, self.get_y(), 190, self.get_y())
-        self.ln(8)
 
-        cleaned = self.clean_text(content)
-        self.set_font("helvetica", "", 11)
-        self.set_text_color(30)
-        for line in cleaned.split("\n"):
-            if self.get_y() > 255:
-                self.add_page()
-            self.multi_cell(0, 6.5, line)
-            self.ln(1)
+        # Extract code block
+        code_match = re.search(r"```([a-zA-Z0-9_\-+]*)\n?(.*?)```", content, re.DOTALL)
+        code_lang = "python"
+        code_content = ""
+        pre_code_text = content
+        post_code_text = ""
 
-        self.ln(6)
-        self.set_draw_color(0, 120, 255)
-        self.set_line_width(0.3)
-        self.line(20, self.get_y(), 190, self.get_y())
-        self.ln(4)
-        self.set_font("helvetica", "I", 8)
-        self.set_text_color(150)
-        self.cell(0, 8, "--- KREGGSCODE ELITE : MASTERY THROUGH PRACTICE ---", align="C")
+        if code_match:
+            code_lang = code_match.group(1) or "python"
+            code_content = code_match.group(2).strip()
+            pre_code_text = content[:code_match.start()].strip()
+            post_code_text = content[code_match.end():].strip()
+
+        # 1. Render Pre-code Concept / Architecture
+        if pre_code_text:
+            self.add_section_header("1. Core Concept & Architectural Deep Dive")
+            self.set_font("helvetica", "", 9.5)
+            self.set_text_color(45, 55, 72)
+            cleaned_pre = self.clean_text_for_pdf(pre_code_text)
+            for p in cleaned_pre.split("\n\n"):
+                p = p.strip()
+                if p:
+                    self.multi_cell(180, 5.2, p)
+                    self.ln(2)
+
+        # 2. Render Code Block
+        if code_content:
+            self.add_section_header("2. Production-Grade Implementation")
+            self.draw_code_box(code_content, language=code_lang)
+
+        # 3. Render Post-code Takeaways
+        if post_code_text:
+            self.add_section_header("3. Key Takeaways & Production Rules")
+            self.set_font("helvetica", "", 9.5)
+            self.set_text_color(45, 55, 72)
+            cleaned_post = self.clean_text_for_pdf(post_code_text)
+            for p in cleaned_post.split("\n"):
+                p = p.strip()
+                if p:
+                    self.multi_cell(180, 5, p)
+                    self.ln(1)
 
 
 def generate_notes(post_type: str, day: int, content: str) -> str:
     """
-    Generate a branded PDF notes file with magazine_cover.jpg on the cover.
-    Returns the file path (unique per post_type/day/date).
+    Generate an executive branded PDF cheat sheet.
+    Returns the file path.
     """
     date_str = datetime.now().strftime("%Y-%m-%d")
-    filename = f"KREGGSCODE_{post_type}_Day{day}_{date_str}.pdf"
+    filename = f"KREGGSCODE_{post_type.upper()}_Day{day}_{date_str}.pdf"
 
-    pdf = NotesPDF(post_type, day)
-    title = pdf.titles.get(post_type, "Technical Notes")
-    pdf.add_cover()
-    pdf.add_content(title, content)
+    pdf = ModernNotesPDF(post_type, day)
+    title = f"{pdf.type_labels.get(post_type, 'Technical Cheat Sheet')} - Day {day}"
+    pdf.render_cheat_sheet(title, content)
     pdf.output(filename)
-    print(f"LOG: Notes PDF saved: {filename}")
+    print(f"LOG: Modern Executive Notes PDF saved: {filename}")
     return filename

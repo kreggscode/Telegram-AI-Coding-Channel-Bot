@@ -5,7 +5,46 @@ from . import telegram_client as tg
 from . import scheduler_logic as sched
 from .templates import TEXT_TEMPLATES, HASHTAGS, get_current_day
 
-print("LOG: Bot Intelligence v2.2 Activated (HTML Syntax Highlighting & Advanced SEO)")
+print("LOG: Bot Intelligence v2.3 Activated (LeetCode POTD, Robust Quiz Parser & Executive Notes)")
+
+
+def parse_quiz_options(raw_opts_str: str, quiz_block: str) -> list[str]:
+    """
+    Robustly extract 2-10 options without splitting on grammatical commas
+    inside option text.
+    """
+    # 1. Bracketed options: [Option 1], [Option 2, with comma], [Option 3]
+    bracketed = re.findall(r"\[([^\]]+)\]", raw_opts_str)
+    if len(bracketed) >= 2:
+        return [b.strip() for b in bracketed if b.strip()][:10]
+
+    # 2. Pipe-separated options: Option 1 | Option 2, with comma | Option 3
+    if "|" in raw_opts_str:
+        pipe_opts = [p.strip().strip("[]'\"") for p in raw_opts_str.split("|") if p.strip()]
+        if len(pipe_opts) >= 2:
+            return pipe_opts[:10]
+
+    # 3. Quoted options: "Opt 1", "Opt 2, with comma", "Opt 3"
+    quoted = re.findall(r'["\']([^"\']+)["\']', raw_opts_str)
+    if len(quoted) >= 2:
+        return [q.strip() for q in quoted if q.strip()][:10]
+
+    # 4. Multiline options: A) Option 1 \n B) Option 2, with comma
+    multiline_opts = re.findall(r"^[ \t]*(?:[A-Da-d\d][\.\)\:\-]|[•\-])\s*(.+)$", quiz_block, re.MULTILINE)
+    if len(multiline_opts) >= 2:
+        return [m.strip().strip("[]'\"") for m in multiline_opts if m.strip()][:10]
+
+    # 5. Comma-split only when followed by option letters (e.g. , B) or , C))
+    labeled_split = re.split(r",\s*(?=[A-Da-d\d][\.\)\:\-])", raw_opts_str)
+    if len(labeled_split) >= 2:
+        return [re.sub(r"^[A-Da-d\d][\.\)\:\-]\s*", "", o).strip() for o in labeled_split if o.strip()][:10]
+
+    # 6. Fallback comma split
+    raw_split = [o.strip().strip("[]'\"") for o in raw_opts_str.split(",") if o.strip()]
+    if len(raw_split) >= 2:
+        return raw_split[:10]
+
+    return []
 
 
 def extract_quiz_data(content: str):
@@ -25,7 +64,7 @@ def extract_quiz_data(content: str):
         quiz_block = match.group(1).strip()
         main_text = (content[:match.start()] + content[match.end():]).strip()
 
-        q, opts, correct, expl = "", [], 0, ""
+        q, raw_opts, correct, expl = "", "", 0, ""
         for line in quiz_block.split("\n"):
             line = line.strip()
             if not line:
@@ -35,13 +74,15 @@ def extract_quiz_data(content: str):
                 q = line.split(":", 1)[1].strip()
             elif lower_line.startswith("options:"):
                 raw_opts = line.split(":", 1)[1].strip()
-                opts = [o.strip().strip("[]") for o in raw_opts.split(",") if o.strip()]
             elif lower_line.startswith("correct:"):
                 m = re.search(r"(\d+)", line)
                 if m:
                     correct = int(m.group(1))
             elif lower_line.startswith("explanation:"):
                 expl = line.split(":", 1)[1].strip()
+
+        # Parse options safely without comma splitting
+        opts = parse_quiz_options(raw_opts, quiz_block)
 
         if q and len(opts) >= 2:
             quiz_data = {
@@ -58,6 +99,7 @@ def post_technical_bundle():
     """Consolidated 4-Course Elite Bundle cleanly formatted without code truncation."""
     topics = [
         ("Python Mastery", TEXT_TEMPLATES["python_tip"]),
+        ("LeetCode POTD", TEXT_TEMPLATES["leetcode_tip"]),
         ("JS Pro", TEXT_TEMPLATES["js_tip"]),
         ("ML Engineering", TEXT_TEMPLATES["ml_tip"]),
         ("Cyber Security", TEXT_TEMPLATES["security_tip"])
@@ -77,7 +119,6 @@ def post_technical_bundle():
             if "AI generation failed" in content or "API Error" in content:
                 print(f"WARNING: Topic {name} failed. Skipping in bundle.")
                 continue
-            # Strip quiz from bundle so bundle is pure high-density reference
             clean_content, _ = extract_quiz_data(content)
             sections.append(clean_content)
         except Exception as e:
@@ -87,16 +128,16 @@ def post_technical_bundle():
         print("FAILED: All topics in bundle failed generation.")
         return
 
-    # Check length: if bundle exceeds Telegram message limit, send in 2 clean parts
     separator = "\n\n━━━━━━━━━━━━━━━━━━━━\n\n"
     full_message = header + separator.join(sections)
     
     if len(full_message) <= 3800:
         tg.send_text(full_message, post_type="tech_bundle")
     else:
-        print("LOG: Bundle is large, splitting into two clean parts...")
-        part1 = header + separator.join(sections[:2])
-        part2 = f"🚀 **KREGGSCODE ELITE BUNDLE (PART 2) - DAY {day}**\n━━━━━━━━━━━━━━━━━━━━\n\n" + separator.join(sections[2:])
+        print("LOG: Bundle is large, splitting into clean parts...")
+        midpoint = len(sections) // 2
+        part1 = header + separator.join(sections[:midpoint])
+        part2 = f"🚀 **KREGGSCODE ELITE BUNDLE (PART 2) - DAY {day}**\n━━━━━━━━━━━━━━━━━━━━\n\n" + separator.join(sections[midpoint:])
         tg.send_text(part1, post_type="tech_bundle")
         tg.send_text(part2, post_type="tech_bundle")
 
@@ -104,9 +145,10 @@ def post_technical_bundle():
 
 
 def post_single_topic(topic_key: str):
-    """Generate and post a single technical topic with code copy button and interactive quiz."""
+    """Generate and post a single technical topic with code copy button, interactive quiz, and cheat sheet."""
     topic_map = {
         "python": ("Python Mastery", TEXT_TEMPLATES["python_tip"]),
+        "leetcode": ("LeetCode Problem of the Day", TEXT_TEMPLATES["leetcode_tip"]),
         "javascript": ("JS Pro", TEXT_TEMPLATES["js_tip"]),
         "ml": ("ML Engineering", TEXT_TEMPLATES["ml_tip"]),
         "security": ("Cyber Security", TEXT_TEMPLATES["security_tip"]),
@@ -128,7 +170,7 @@ def post_single_topic(topic_key: str):
         # Robust Quiz & Content Extraction
         main_text, quiz_data = extract_quiz_data(content)
 
-        # 1. Post Main Technical Lesson (with Syntax Highlighted Code & Copy Button)
+        # 1. Post Main Technical Lesson (Syntax Highlighted Code & Copy Button)
         print(f"LOG: Posting {name} lesson...")
         resp_text = tg.send_text(main_text, post_type=topic_key)
         text_ok = resp_text is not None and resp_text.status_code == 200
@@ -136,21 +178,21 @@ def post_single_topic(topic_key: str):
         # 2. Post Interactive Quiz Poll
         quiz_ok = True
         if quiz_data:
-            print(f"LOG: Sending Quiz for {name}...")
+            print(f"LOG: Sending Quiz for {name} ({len(quiz_data['options'])} options)...")
             resp_quiz = tg.send_quiz(**quiz_data)
             quiz_ok = resp_quiz is not None and resp_quiz.status_code == 200
         else:
             print(f"INFO: No quiz block parsed for {name}.")
 
-        # 3. Generate & Post Branded Notes PDF
+        # 3. Generate & Post Modern Executive Cheat Sheet PDF
         day = get_current_day()
         try:
             from .notes_generator import generate_notes
             pdf_path = generate_notes(topic_key, day, main_text)
-            print(f"LOG: Sending Notes PDF to Telegram...")
+            print(f"LOG: Sending Executive Cheat Sheet PDF to Telegram...")
             tg.send_document(
                 pdf_path,
-                caption=f"📄 **{name} - Master Notes (Day {day})**\n\nDaily cheat-sheet & code reference for the @kreggscode community.",
+                caption=f"📄 **{name} - Reference Cheat Sheet (Day {day})**\n\nDaily high-performance architecture reference for the @kreggscode community.",
                 post_type=topic_key
             )
         except Exception as e:
@@ -172,7 +214,7 @@ def post_daily_magazine():
         pdf_path = create_magazine()
         caption = (
             "📖 **KREGGSCODE Daily Magazine**\n\n"
-            "Your deep-dive into Software Architecture, Python & AI Systems. "
+            "Your comprehensive deep-dive into Software Architecture, Python & AI Systems. "
             "Hand-crafted for the @kreggscode developer community. Enjoy! 🚀"
         )
         tg.send_document(pdf_path, caption=caption, post_type="magazine")
@@ -195,7 +237,7 @@ def main():
 
     if post_type == "magazine":
         post_daily_magazine()
-    elif post_type in ["python", "javascript", "ml", "security", "interview"]:
+    elif post_type in ["python", "leetcode", "javascript", "ml", "security", "interview"]:
         post_single_topic(post_type)
     elif post_type == "tech_bundle":
         post_technical_bundle()

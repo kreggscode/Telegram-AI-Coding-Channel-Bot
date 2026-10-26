@@ -12,18 +12,20 @@ BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
 def add_social_footer(text: str) -> str:
-    """Add social media links footer using robust hyperlinks."""
-    if "Connect with kreggscode" in text:
+    """Add sleek, executive social media footer with emojis and hyperlinked channels."""
+    if "Connect with kreggscode" in text or "Connect with @kreggscode" in text:
         return text
 
     footer = """
 
 ━━━━━━━━━━━━━━━━━━━━
-🔗 [Connect with kreggscode](https://t.me/kreggscode):
+🚀 **Connect with @kreggscode:**
 
-📷 [Instagram](https://instagram.com/kreggscode) • ✖️ [X/Twitter](https://x.com/kreggscode)
-▶️ [YouTube](https://youtube.com/@kreggscode) • 💬 [Telegram](https://t.me/kreggscode)
-📘 [Facebook Page](https://www.facebook.com/share/1b95f6Sn3c/) • 🎮 [My Apps](https://play.google.com/store/apps/dev?id=4822923174061161987)"""
+💬 [Telegram Community](https://t.me/kreggscode) • 📷 [Instagram](https://instagram.com/kreggscode)
+✖️ [X / Twitter](https://x.com/kreggscode) • ▶️ [YouTube](https://youtube.com/@kreggscode)
+📘 [Facebook](https://www.facebook.com/share/1b95f6Sn3c/) • 🎮 [Play Store Apps](https://play.google.com/store/apps/dev?id=4822923174061161987)
+⭐ [GitHub Repositories](https://github.com/kreggscode)
+━━━━━━━━━━━━━━━━━━━━"""
     return text.rstrip() + footer
 
 

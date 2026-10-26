@@ -26,6 +26,8 @@ def set_post_type():
         post_type = path.split("/")[-1].replace("-", "_")
         if post_type == "python_tip":
             post_type = "python"
+        elif post_type == "leetcode_potd":
+            post_type = "leetcode"
         elif post_type == "js_tip":
             post_type = "javascript"
         elif post_type == "ml_tip":
@@ -49,6 +51,14 @@ def send_python_tip():
     text = ai.generate_text(TEXT_TEMPLATES["python_tip"]())
     tg.send_text(text, post_type="python")
     flash("Python tip sent!", "success")
+    return redirect(url_for("index"))
+
+
+@app.route("/send/leetcode-potd")
+def send_leetcode_potd():
+    text = ai.generate_text(TEXT_TEMPLATES["leetcode_tip"]())
+    tg.send_text(text, post_type="leetcode")
+    flash("LeetCode POTD sent!", "success")
     return redirect(url_for("index"))
 
 
