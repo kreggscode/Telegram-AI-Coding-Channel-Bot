@@ -103,8 +103,9 @@ def markdown_to_telegram_html(text: str) -> str:
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text, flags=re.DOTALL)
     text = re.sub(r"__(.+?)__", r"<b>\1</b>", text, flags=re.DOTALL)
 
-    # 9. Convert Italic: *text* -> <i>text</i> (avoiding asterisks that are part of bullet points)
+    # 9. Convert Italic: *text* or _text_ -> <i>text</i>
     text = re.sub(r"(?<!\*)\*([^\*\n]+)\*(?!\*)", r"<i>\1</i>", text)
+    text = re.sub(r"(?<![a-zA-Z0-9_])_([^_\n]+)_(?![a-zA-Z0-9_])", r"<i>\1</i>", text)
 
     # 10. Restore blockquotes
     for i, replacement in enumerate(blockquotes):
@@ -140,6 +141,7 @@ def plain_text_fallback_formatter(text: str) -> str:
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
     text = re.sub(r"__(.+?)__", r"\1", text)
     text = re.sub(r"(?<!\*)\*([^\*\n]+)\*(?!\*)", r"\1", text)
+    text = re.sub(r"(?<![a-zA-Z0-9_])_([^_\n]+)_(?![a-zA-Z0-9_])", r"\1", text)
 
     # Strip headers # Header -> Header
     text = re.sub(r"^(?:#{1,4})\s+(.+)$", r"\1", text, flags=re.MULTILINE)
