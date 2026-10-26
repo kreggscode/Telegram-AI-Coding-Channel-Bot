@@ -2,7 +2,7 @@ import json
 import re
 import requests
 from .config import BOT_TOKEN, CHAT_ID
-from .formatter import markdown_to_telegram_html, safe_truncate_html
+from .formatter import markdown_to_telegram_html, plain_text_fallback_formatter, safe_truncate_html
 
 BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
