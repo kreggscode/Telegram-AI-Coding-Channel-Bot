@@ -103,12 +103,12 @@ def get_ai_prompt():
         "Create an elite, cutting-edge AI engineering masterclass formatted in Markdown:\n\n"
         f"**🤖 AI Engineering: Day {day} - {topic}**\n\n"
         "💡 **Architectural & Mathematical Intuition:**\n"
-        "Explain senior-level intuition (2-3 concise paragraphs): why this matters in modern Generative AI / LLM systems, core mathematical or architectural mechanisms, and production scaling challenges (latency, memory, token cost).\n\n"
+        "Explain senior-level intuition (1-2 dense paragraphs): why this matters in modern Generative AI / LLM systems, core mechanisms, and production scaling challenges (latency, memory, token cost).\n\n"
         "💻 **Production-Grade Implementation (Python):**\n"
         "Provide a realistic, production-ready Python snippet (PyTorch, LangChain, Transformers, or Vector DB). CRITICAL REQUIREMENTS:\n"
         "- The code MUST be 100% complete, runnable, and bug-free.\n"
         "- NEVER use placeholders or ellipses like '# ...'. Write working logic.\n"
-        "- Include comments explaining key architectural decisions.\n"
+        "- Keep the code snippet focused and under 25 lines.\n"
         "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the Copy Code button.\n\n"
         "⚡ **Senior AI Engineer Pro-Tips:**\n"
         "• Production Best Practice: [Senior architectural rule]\n"
@@ -119,7 +119,9 @@ def get_ai_prompt():
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of why this answer is correct]\n"
         "[/QUIZ]\n\n"
-        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
+        "STRICT LENGTH & FORMAT RULES:\n"
+        "- Total response MUST be UNDER 2,200 characters to fit in ONE single Telegram message.\n"
+        "- Each quiz option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -131,12 +133,12 @@ def get_python_prompt():
         "Create a senior-level Python engineering lesson formatted in Markdown:\n\n"
         f"**🐍 Python Mastery: Day {day} - {topic}**\n\n"
         "💡 **Architectural Intuition & Deep Dive:**\n"
-        "Explain senior-level intuition (2-3 concise paragraphs): internal runtime behavior, memory/performance implications, and why senior backend architects use this pattern.\n\n"
+        "Explain senior-level intuition (1-2 dense paragraphs): internal runtime behavior, memory/performance implications, and why senior backend architects use this pattern.\n\n"
         "💻 **Production Code Snippet:**\n"
         "Provide a realistic, production-ready Python snippet. CRITICAL REQUIREMENTS:\n"
         "- The code MUST be 100% complete, runnable, and bug-free.\n"
         "- NEVER use placeholders or ellipses like '# ...'. Write genuine working logic.\n"
-        "- Include helpful comments explaining key lines.\n"
+        "- Keep the code snippet focused and under 25 lines.\n"
         "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the interactive Copy Code button.\n\n"
         "⚡ **Key Architectural Takeaways:**\n"
         "• Pro-Tip: [Senior best practice for high scale]\n"
@@ -147,7 +149,9 @@ def get_python_prompt():
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
+        "STRICT LENGTH & FORMAT RULES:\n"
+        "- Total response MUST be UNDER 2,200 characters to fit in ONE single Telegram message.\n"
+        "- Each quiz option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -159,12 +163,13 @@ def get_leetcode_prompt():
         "Create an elite, interview-ready LeetCode challenge formatted in Markdown:\n\n"
         f"**🧩 LeetCode POTD: Day {day} - {topic}**\n\n"
         "💡 **Problem & Algorithmic Strategy:**\n"
-        "Explain the core algorithmic pattern (2-3 concise paragraphs): why brute force fails, how senior engineers identify the optimal approach (e.g. Two-Pointer, Sliding Window, Monotonic Stack, or DP), and key constraints.\n\n"
+        "Explain the core algorithmic pattern (1-2 dense paragraphs): why brute force fails, how senior engineers identify the optimal approach (e.g. Two-Pointer, Sliding Window, Monotonic Stack, or DP), and key constraints.\n\n"
         "💻 **Optimal Solution (Python):**\n"
         "Provide the complete, 100% runnable, optimal solution. CRITICAL REQUIREMENTS:\n"
         "- The code MUST be 100% complete, runnable, and bug-free.\n"
         "- NEVER use placeholders or ellipses like '# ...'. Write genuine working logic.\n"
         "- Specify Time Complexity (e.g. O(N)) and Space Complexity (e.g. O(1)) in comments.\n"
+        "- Keep the code snippet under 25 lines.\n"
         "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the Copy Code button.\n\n"
         "⚡ **FAANG Interview Tips:**\n"
         "• Reusable Pattern: [How to apply this pattern to similar LeetCode problems]\n"
@@ -175,7 +180,9 @@ def get_leetcode_prompt():
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of why this is correct]\n"
         "[/QUIZ]\n\n"
-        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
+        "STRICT LENGTH & FORMAT RULES:\n"
+        "- Total response MUST be UNDER 2,200 characters to fit in ONE single Telegram message.\n"
+        "- Each quiz option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -187,11 +194,12 @@ def get_fullstack_prompt():
         "Create a modern engineering lesson formatted in Markdown:\n\n"
         f"**⚡ Fullstack Pro: Day {day} - {topic}**\n\n"
         "💡 **Architectural Insight:**\n"
-        "Explain senior-level intuition (2-3 concise paragraphs): runtime mechanics, browser/Node engine behavior, and modern production best practices.\n\n"
+        "Explain senior-level intuition (1-2 dense paragraphs): runtime mechanics, browser/Node engine behavior, and modern production best practices.\n\n"
         "💻 **Production Code Snippet:**\n"
         "Provide a clean, production-grade TypeScript/JavaScript snippet. CRITICAL REQUIREMENTS:\n"
         "- The code MUST be 100% complete, runnable, and bug-free.\n"
         "- NEVER use placeholders or ellipses like '// ...'. Write working logic.\n"
+        "- Keep the code snippet focused and under 25 lines.\n"
         "- Wrap the code in triple backticks with the language tag (```typescript\\n...\\n```) so Telegram renders the Copy Code button.\n\n"
         "⚡ **Key Takeaways:**\n"
         "• Pro-Tip: [Senior best practice]\n"
@@ -202,7 +210,9 @@ def get_fullstack_prompt():
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
+        "STRICT LENGTH & FORMAT RULES:\n"
+        "- Total response MUST be UNDER 2,200 characters to fit in ONE single Telegram message.\n"
+        "- Each quiz option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 
@@ -214,10 +224,11 @@ def get_security_prompt():
         "Create an elite, technical cyber security lesson in Markdown:\n\n"
         f"**🔓 Cyber Security: Day {day} - {topic}**\n\n"
         "💡 **Vulnerability & Threat Analysis:**\n"
-        "Explain senior-level exploit logic (2-3 concise paragraphs): root cause vulnerability, real-world attack vectors, and secure defensive engineering.\n\n"
+        "Explain senior-level exploit logic (1-2 dense paragraphs): root cause vulnerability, real-world attack vectors, and secure defensive engineering.\n\n"
         "💻 **Security Audit / Remediation Script:**\n"
         "Provide a realistic Python security audit script, payload demo, or defensive mitigation snippet. CRITICAL REQUIREMENTS:\n"
         "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- Keep the code snippet focused and under 25 lines.\n"
         "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the Copy Code button.\n\n"
         "⚡ **Key Takeaways:**\n"
         "• Offensive Recon: [How attackers identify this flaw]\n"
@@ -228,7 +239,9 @@ def get_security_prompt():
         "Correct: [Index 0-3]\n"
         "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
         "[/QUIZ]\n\n"
-        "STRICT OPTION FORMAT: Each option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
+        "STRICT LENGTH & FORMAT RULES:\n"
+        "- Total response MUST be UNDER 2,200 characters to fit in ONE single Telegram message.\n"
+        "- Each quiz option MUST be inside brackets separated by pipe: [Option 1] | [Option 2] | [Option 3] | [Option 4]."
     )
 
 

@@ -50,19 +50,19 @@ def parse_quiz_options(raw_opts_str: str, quiz_block: str) -> list[str]:
 def extract_quiz_data(content: str):
     """
     Robust extraction of [QUIZ] ... [/QUIZ] blocks using regex.
+    Handles optional asterisks around [QUIZ] and ensures main_text has no dangling asterisks.
     Returns (main_text_without_quiz, quiz_dict_or_None).
     """
     quiz_data = None
     main_text = content
 
-    match = re.search(r"\[QUIZ\](.*?)\[/QUIZ\]", content, flags=re.DOTALL | re.IGNORECASE)
-    if not match:
-        # Fallback if [/QUIZ] was omitted at end of message
-        match = re.search(r"\[QUIZ\](.*)", content, flags=re.DOTALL | re.IGNORECASE)
+    match = re.search(r"(?:\*\*)?\[QUIZ\](?:\*\*)?(.*?)(?:\[/QUIZ\](?:\*\*)?|$)", content, flags=re.DOTALL | re.IGNORECASE)
 
     if match:
         quiz_block = match.group(1).strip()
         main_text = (content[:match.start()] + content[match.end():]).strip()
+        # Clean any trailing bold markers or whitespace from main_text
+        main_text = re.sub(r"\*\*+\s*$", "", main_text).strip()
 
         q, raw_opts, correct, expl = "", "", 0, ""
         for line in quiz_block.split("\n"):
