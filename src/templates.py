@@ -2,42 +2,98 @@ from datetime import datetime
 import random
 from .config import COURSE_START_DATE
 
-print("LOG: Using Templates Engine v2.1")
+print("LOG: Using Templates Engine v2.2 (SEO & High-Performance Formatting)")
+
 
 def get_current_day():
     """Calculate the current day of the course."""
-    start = datetime.strptime(COURSE_START_DATE, "%Y-%m-%d")
-    now = datetime.now()
-    delta = now - start
-    return max(1, delta.days + 1)
+    try:
+        start = datetime.strptime(COURSE_START_DATE, "%Y-%m-%d")
+        now = datetime.now()
+        delta = now - start
+        return max(1, delta.days + 1)
+    except Exception:
+        return 1
+
 
 # Advanced Topic pools for high-quality variety
 PYTHON_TOPICS = [
-    "Object Oriented Programming (OOP)", "Generators and Iterators", "Decorators", "Context Managers",
-    "List/Dict Comprehensions", "Metaclasses", "Multithreading vs Multiprocessing", "AsyncIO and Concurrency",
-    "Type Hinting", "Regular Expressions", "File I/O and OS module", "Networking with Requests/Sockets",
-    "Data Structures (Queues, Stacks, Heaps)", "Algorithm Complexity (Big O)"
+    "Object Oriented Programming (OOP & Dunder Methods)",
+    "Generators, Yield and Memory-Efficient Iterators",
+    "Advanced Decorators and Function Wrappers",
+    "Context Managers and the 'with' Statement",
+    "List, Set & Dict Comprehensions with Walrus Operator",
+    "Metaclasses and Class Creation Hooks",
+    "Multithreading vs Multiprocessing & the GIL",
+    "AsyncIO, Coroutines and Event Loops",
+    "Type Hinting, Generics and Pydantic Models",
+    "Advanced Regular Expressions and Pattern Matching",
+    "High-Performance File I/O and Streaming",
+    "Networking with Async Sockets and HTTPX",
+    "Data Structures: Queues, Heaps (heapq) & Deques",
+    "Algorithm Complexity & Memory Profiling (tracemalloc)",
+    "Design Patterns: Factory, Singleton & Observer in Python",
+    "Functional Programming: functools (lru_cache, partial)"
 ]
 
 JS_TOPICS = [
-    "ES6+ Features", "Asynchronous JS (Promises, Async/Await)", "Closures and Scopes", "Prototypal Inheritance",
-    "DOM Manipulation", "Event Loop Mechanics", "Functional Programming", "Higher Order Functions",
-    "Storage (LocalStorage, IndexedDB)", "Web APIs (Fetch, Geolocation)", "Module Systems (ESM vs CJS)",
-    "Performance Optimization", "Security Best Practices (XSS, CSRF)"
+    "ES6+ Modern Syntax and Destructuring Patterns",
+    "Asynchronous JS: Deep Dive into Promises & Async/Await",
+    "Closures, Lexical Scope and Execution Context",
+    "The JavaScript Event Loop, Microtasks & Macrotasks",
+    "Functional Programming, Immutability & Currying",
+    "Prototypal Inheritance and Class Mechanics",
+    "Web APIs: Fetch API, AbortController & Streams",
+    "Module Systems: ESM vs CommonJS & Tree Shaking",
+    "TypeScript Essentials: Generics, Utility Types & Inference",
+    "Performance Optimization: Debouncing, Throttling & Memoization",
+    "Web Security: Preventing XSS, CSRF & Injection",
+    "State Management Principles & Immutability Patterns"
 ]
 
 ML_TOPICS = [
-    "Supervised vs Unsupervised Learning", "Linear and Logistic Regression", "Decision Trees and Random Forests",
-    "Neural Network Architectures", "Natural Language Processing (NLP)", "Computer Vision Basics",
-    "Feature Engineering", "Model Evaluation Metrics", "Reinforcement Learning", "Deep Learning with PyTorch",
-    "Gradient Descent Optimization", "Clustering Algorithms"
+    "Supervised vs Unsupervised Learning Paradigms",
+    "Linear and Logistic Regression from Intuition to Code",
+    "Decision Trees, Random Forests and Ensemble Methods",
+    "Neural Network Architectures & Backpropagation",
+    "Natural Language Processing (NLP) & Tokenization",
+    "Computer Vision Fundamentals & Convolutional Operations",
+    "Feature Engineering, Encoding & Scaling Strategies",
+    "Model Evaluation Metrics: ROC-AUC, F1-Score & Precision-Recall",
+    "Deep Learning Workflows with PyTorch Tensors",
+    "Gradient Descent Optimization: Adam, RMSprop & Learning Rate Schedules",
+    "Clustering Algorithms: K-Means, DBSCAN & Silhouette Analysis",
+    "Vector Embeddings and Semantic Search Architecture"
 ]
 
 SECURITY_TOPICS = [
-    "Web Application Pentesting (OWASP Top 10)", "SQL Injection (SQLi)", "Cross-Site Scripting (XSS)", 
-    "Broken Authentication", "Insecure Direct Object References (IDOR)", "Subdomain Takeover",
-    "API Security Vulnerabilities", "Network Hacking and Nmap", "Buffer Overflows", "Privilege Escalation",
-    "Reverse Engineering basics", "Bug Bounty Hunting Methodologies"
+    "OWASP Top 10 Vulnerabilities & Enterprise Defense",
+    "SQL Injection (SQLi) Exploitation & Prepared Statements",
+    "Cross-Site Scripting (XSS): Stored, Reflected & DOM-based",
+    "Broken Authentication & Secure JWT Implementation",
+    "Insecure Direct Object References (IDOR) & Access Control",
+    "API Security: Rate Limiting, CORS & Token Validation",
+    "Network Reconnaissance & Port Scanning Architecture",
+    "Privilege Escalation Mechanics & Remediation",
+    "Reverse Engineering Fundamentals & Static Analysis",
+    "Cryptographic Hashing, Salt & Secure Password Storage",
+    "Bug Bounty Hunting Methodologies & Recon Workflows",
+    "Defense in Depth & Cloud Security Hardening"
+]
+
+INTERVIEW_TOPICS = [
+    "Data Structures: Arrays, HashMaps & Two-Pointer Patterns",
+    "System Design: Designing a High-Throughput URL Shortener",
+    "Concurrency, Race Conditions & Mutex Locks",
+    "Database Indexing: B-Trees, Query Optimization & EXPLAIN",
+    "Distributed Systems: CAP Theorem, Partitioning & Consensus",
+    "Caching Strategies: Cache-Aside, Write-Through & Eviction (LRU)",
+    "Load Balancing Algorithms & Reverse Proxies (Nginx)",
+    "Message Queues & Event-Driven Architecture (Kafka / RabbitMQ)",
+    "Dynamic Programming: Memoization vs Tabulation Strategies",
+    "Graph Algorithms: Breadth-First Search (BFS) vs DFS & Dijkstra",
+    "Object-Oriented Design: SOLID Principles with Practical Examples",
+    "Microservices Architecture: Service Mesh, Gateways & Circuit Breakers"
 ]
 
 
@@ -45,19 +101,27 @@ def get_python_prompt():
     day = get_current_day()
     topic = random.choice(PYTHON_TOPICS)
     return (
-        f"Today is Day {day} of the Elite Python Course. Topic: {topic}. "
-        "Create a detailed advanced lesson (200 words max) including:\n"
-        "1. Header: **🐍 Python Mastery: Day [X] - [Topic]**\n"
-        "2. Senior-level architectural insight.\n"
-        "3. A professional, production-grade code snippet.\n"
-        "4. A [QUIZ] section exactly in this format:\n"
+        f"Today is Day {day} of the Elite Python Course. Topic: {topic}.\n\n"
+        "Create a premium, master-level coding lesson in Markdown with this EXACT structure:\n\n"
+        f"**🐍 Python Mastery: Day {day} - {topic}**\n\n"
+        "💡 **Architectural Insight:**\n"
+        "Explain senior-level intuition (2-3 concise paragraphs): how it works under the hood, memory/runtime implications, and why it matters in high-performance production systems.\n\n"
+        "💻 **Production Code Snippet:**\n"
+        "Provide a realistic, production-ready code snippet. CRITICAL REQUIREMENTS:\n"
+        "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- NEVER use placeholders or ellipses like '# ... rest of code'. Write working logic.\n"
+        "- Include helpful comments explaining key lines.\n"
+        "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the interactive Copy Code button.\n\n"
+        "⚡ **Key Takeaways:**\n"
+        "• Pro-Tip: [Senior best practice]\n"
+        "• Pitfall: [Common mistake/anti-pattern to avoid]\n\n"
         "[QUIZ]\n"
-        "Question: [The question]\n"
+        "Question: [A clear knowledge-check multiple choice question]\n"
         "Options: [Option A], [Option B], [Option C], [Option D]\n"
         "Correct: [Index 0-3]\n"
-        "Explanation: [Brief explanation of why it is correct]\n"
-        "[/QUIZ]\n"
-        "STRICT: Focus on high-performance logic. Use triple backticks for code."
+        "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
+        "[/QUIZ]\n\n"
+        "Keep the text punchy, technical, and educational."
     )
 
 
@@ -65,19 +129,27 @@ def get_js_prompt():
     day = get_current_day()
     topic = random.choice(JS_TOPICS)
     return (
-        f"Today is Day {day} of the Modern JavaScript Pro Course. Topic: {topic}. "
-        "Create a detailed advanced lesson (200 words max) including:\n"
-        "1. Header: **⚡ JS Pro: Day [X] - [Topic]**\n"
-        "2. Senior-level architectural insight (ES6+).\n"
-        "3. A clean, production-grade code snippet.\n"
-        "4. A [QUIZ] section exactly in this format:\n"
+        f"Today is Day {day} of the Modern JavaScript Pro Course. Topic: {topic}.\n\n"
+        "Create a premium, senior-level coding lesson in Markdown with this EXACT structure:\n\n"
+        f"**⚡ JS Pro: Day {day} - {topic}**\n\n"
+        "💡 **Architectural Insight:**\n"
+        "Explain senior-level intuition (2-3 concise paragraphs): event loop behavior, browser/Node engine mechanics, and modern ES6+/TypeScript best practices.\n\n"
+        "💻 **Production Code Snippet:**\n"
+        "Provide a realistic, production-ready code snippet. CRITICAL REQUIREMENTS:\n"
+        "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- NEVER use placeholders or ellipses like '// ... rest of code'. Write working logic.\n"
+        "- Include helpful comments explaining key lines.\n"
+        "- Wrap the code in triple backticks with the language tag (```javascript\\n...\\n```) so Telegram renders the interactive Copy Code button.\n\n"
+        "⚡ **Key Takeaways:**\n"
+        "• Pro-Tip: [Senior best practice]\n"
+        "• Pitfall: [Common mistake/anti-pattern to avoid]\n\n"
         "[QUIZ]\n"
-        "Question: [The question]\n"
+        "Question: [A clear knowledge-check multiple choice question]\n"
         "Options: [Option A], [Option B], [Option C], [Option D]\n"
         "Correct: [Index 0-3]\n"
-        "Explanation: [Brief explanation of why it is correct]\n"
-        "[/QUIZ]\n"
-        "STRICT: No beginner talk. Focus on professional-grade logic."
+        "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
+        "[/QUIZ]\n\n"
+        "Keep the text punchy, technical, and educational."
     )
 
 
@@ -85,19 +157,27 @@ def get_ml_prompt():
     day = get_current_day()
     topic = random.choice(ML_TOPICS)
     return (
-        f"Today is Day {day} of the AI/ML Engineering Course. Topic: {topic}. "
-        "Create a detailed technical lesson (200 words max) including:\n"
-        "1. Header: **🤖 ML Engineering: Day [X] - [Topic]**\n"
-        "2. Mathematical or structural insight.\n"
-        "3. A scikit-learn/numpy/torch code snippet.\n"
-        "4. A [QUIZ] section exactly in this format:\n"
+        f"Today is Day {day} of the AI/ML Engineering Course. Topic: {topic}.\n\n"
+        "Create a premium, engineering-focused ML lesson in Markdown with this EXACT structure:\n\n"
+        f"**🤖 ML Engineering: Day {day} - {topic}**\n\n"
+        "💡 **Mathematical & Architectural Insight:**\n"
+        "Explain senior-level intuition (2-3 concise paragraphs): core math/structural logic, data scaling challenges, and production deployment considerations.\n\n"
+        "💻 **Production Code Snippet:**\n"
+        "Provide a realistic, production-ready scikit-learn, numpy, or PyTorch snippet. CRITICAL REQUIREMENTS:\n"
+        "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- NEVER use placeholders or ellipses like '# ... rest of code'. Write working logic.\n"
+        "- Include helpful comments explaining key lines.\n"
+        "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the interactive Copy Code button.\n\n"
+        "⚡ **Key Takeaways:**\n"
+        "• Pro-Tip: [Senior best practice]\n"
+        "• Pitfall: [Common mistake/anti-pattern to avoid]\n\n"
         "[QUIZ]\n"
-        "Question: [The question]\n"
+        "Question: [A clear knowledge-check multiple choice question]\n"
         "Options: [Option A], [Option B], [Option C], [Option D]\n"
         "Correct: [Index 0-3]\n"
-        "Explanation: [Brief explanation of why it is correct]\n"
-        "[/QUIZ]\n"
-        "STRICT: Focus on performance and scalability."
+        "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
+        "[/QUIZ]\n\n"
+        "Keep the text punchy, technical, and educational."
     )
 
 
@@ -105,48 +185,55 @@ def get_security_prompt():
     day = get_current_day()
     topic = random.choice(SECURITY_TOPICS)
     return (
-        f"Today is Day {day} of the Cyber Security & Bug Bounty Course. Topic: {topic}. "
-        "Create a 'wild' detailed technical lesson (200 words max) including:\n"
-        "1. Header: **🔓 Cyber Security: Day [X] - [Topic]**\n"
-        "2. Detailed exploit/vulnerability logic.\n"
-        "3. A PoC script or payload.\n"
-        "4. A [QUIZ] section exactly in this format:\n"
+        f"Today is Day {day} of the Cyber Security & Bug Bounty Course. Topic: {topic}.\n\n"
+        "Create an elite, technical cyber security lesson in Markdown with this EXACT structure:\n\n"
+        f"**🔓 Cyber Security: Day {day} - {topic}**\n\n"
+        "💡 **Vulnerability & Threat Analysis:**\n"
+        "Explain senior-level exploit logic (2-3 concise paragraphs): root cause vulnerability, real-world attack vectors, and secure defensive engineering.\n\n"
+        "💻 **Security Audit / Remediation Script:**\n"
+        "Provide a realistic Python security audit script, payload demo, or defensive mitigation snippet. CRITICAL REQUIREMENTS:\n"
+        "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- NEVER use placeholders or ellipses like '# ...'. Write working logic.\n"
+        "- Include helpful comments explaining key lines.\n"
+        "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the interactive Copy Code button.\n\n"
+        "⚡ **Key Takeaways:**\n"
+        "• Offensive Recon: [How attackers identify this flaw]\n"
+        "• Defensive Hardening: [How architects patch it securely]\n\n"
         "[QUIZ]\n"
-        "Question: [The question]\n"
+        "Question: [A clear knowledge-check multiple choice question]\n"
         "Options: [Option A], [Option B], [Option C], [Option D]\n"
         "Correct: [Index 0-3]\n"
-        "Explanation: [Brief explanation of why it is correct]\n"
-        "[/QUIZ]\n"
-        "STRICT: Make it sound professional and advanced."
+        "Explanation: [Concise 1-2 sentence explanation of the correct answer]\n"
+        "[/QUIZ]\n\n"
+        "Keep the text punchy, technical, and educational."
     )
 
 
 def get_interview_prompt():
     day = get_current_day()
-    topics = [
-        "Data Structures & Algorithms", "System Design", "Behavioral Questions", 
-        "Operating Systems", "Database Design", "Object-Oriented Design",
-        "Distributed Systems", "Concurrency & Parallelism", "API Design & REST",
-        "Dynamic Programming", "Tree & Graph Algorithms", "Sorting & Searching",
-        "Design Patterns", "Microservices Architecture", "SQL vs NoSQL",
-        "Caching Strategies", "Load Balancing", "CAP Theorem & Consistency",
-        "Message Queues & Event-Driven Architecture", "Containerization & Docker"
-    ]
-    topic = random.choice(topics)
+    topic = random.choice(INTERVIEW_TOPICS)
     return (
-        f"Today is Day {day} of the Interview Prep Series. Topic: {topic}. "
-        "Create a technical interview question and answer (200 words max) including:\n"
-        "1. Header: **💼 Interview Prep: Day [X] - [Topic]**\n"
-        "2. A realistic interview question that a FAANG company would ask.\n"
-        "3. A step-by-step approach to solve it.\n"
-        "4. A [QUIZ] section exactly in this format:\n"
+        f"Today is Day {day} of the FAANG Interview Prep Series. Topic: {topic}.\n\n"
+        "Create a top-tier technical interview guide in Markdown with this EXACT structure:\n\n"
+        f"**💼 Interview Prep: Day {day} - {topic}**\n\n"
+        "💡 **The Problem / Architecture Question:**\n"
+        "Present a realistic technical question asked at FAANG/Tier-1 companies, followed by the senior engineering approach to solve it with optimal time/space complexity.\n\n"
+        "💻 **Optimal Production Solution:**\n"
+        "Provide the complete, optimal Python or algorithm solution snippet. CRITICAL REQUIREMENTS:\n"
+        "- The code MUST be 100% complete, runnable, and bug-free.\n"
+        "- NEVER use placeholders or ellipses like '# ...'. Write working logic.\n"
+        "- Include Big-O Time & Space complexity in comments.\n"
+        "- Wrap the code in triple backticks with the language tag (```python\\n...\\n```) so Telegram renders the interactive Copy Code button.\n\n"
+        "⚡ **Interview Success Key:**\n"
+        "• Trade-off: [Key trade-off to mention to the interviewer]\n"
+        "• Follow-up: [Typical follow-up question interviewers ask]\n\n"
         "[QUIZ]\n"
-        "Question: [A quick knowledge check related to this topic]\n"
+        "Question: [A quick conceptual knowledge check related to this interview problem]\n"
         "Options: [Option A], [Option B], [Option C], [Option D]\n"
         "Correct: [Index 0-3]\n"
-        "Explanation: [Brief explanation of why it is correct]\n"
-        "[/QUIZ]\n"
-        "STRICT: Focus on real interview scenarios. Be practical and detailed."
+        "Explanation: [Concise 1-2 sentence explanation of why this answer is correct]\n"
+        "[/QUIZ]\n\n"
+        "Keep the text punchy, technical, and educational."
     )
 
 
@@ -159,31 +246,31 @@ TEXT_TEMPLATES = {
     "tech_news": (
         "Write a short tech/coding news update with this EXACT format:\n\n"
         "**📰 Tech News: [Headline]**\n\n"
-        "[2-3 sentences about a recent development in programming, AI, or tech]\n\n"
+        "[2-3 sentences about a recent development in programming, AI, or software engineering]\n\n"
         "**🔍 What This Means:**\n"
-        "• [Impact point 1]\n"
-        "• [Impact point 2]\n\n"
+        "• [Key architectural impact point 1]\n"
+        "• [Key architectural impact point 2]\n\n"
         "**💭 For Developers:**\n"
-        "[One sentence about how this affects developers]\n\n"
-        "Keep it current, relevant, and under 120 words. Make it sound recent and exciting."
+        "[One actionable sentence about how developers should prepare or leverage this]\n\n"
+        "Keep it current, relevant, and under 150 words. Make it sound exciting and insightful."
     ),
     "thread_explainer": (
-        "Explain a programming concept with this EXACT format:\n\n"
-        "**🧵 Thread: [Concept Name Explained]**\n\n"
-        "**1️⃣ What is it?**\n"
-        "[2-3 sentences]\n\n"
-        "**2️⃣ How it works:**\n"
-        "[2-3 sentences with simple example]\n\n"
-        "**3️⃣ When to use it:**\n"
-        "[2-3 sentences]\n\n"
-        "**4️⃣ Pro tip:**\n"
-        "[1-2 sentences with actionable advice]\n\n"
-        "Keep each section concise and clear."
+        "Explain a core computer science or programming concept with this EXACT format:\n\n"
+        "**🧵 Deep Dive: [Concept Name Explained]**\n\n"
+        "**1️⃣ Core Intuition:**\n"
+        "[2-3 sentences explaining the fundamental concept simply]\n\n"
+        "**2️⃣ How It Works Under The Hood:**\n"
+        "[2-3 sentences with a concise code snippet or example]\n\n"
+        "**3️⃣ Real-World Production Use Case:**\n"
+        "[2-3 sentences explaining where high-scale companies use this]\n\n"
+        "**4️⃣ Senior Engineer Pro Tip:**\n"
+        "[1-2 sentences with actionable architectural advice]\n\n"
+        "Keep each section clear, structured, and visually engaging."
     ),
     "poll_question": (
-        "Create ONE multiple choice coding question. "
-        "Format strictly as: Question? | Option A, Option B, Option C. "
-        "Make it short and clear, suitable for a Telegram poll."
+        "Create ONE multiple choice coding question testing software engineering knowledge. "
+        "Format strictly as: Question? | Option A, Option B, Option C, Option D. "
+        "Make it sharp, challenging, and suitable for a Telegram poll."
     )
 }
 
@@ -197,15 +284,16 @@ IMAGE_TEMPLATES = {
     "clean_code": "before and after code comparison, split screen, one side messy one side clean, minimalist illustration",
 }
 
+# SEO-Optimized Targeted Hashtags for Maximum Discoverability in Telegram Search & Google SERP
 HASHTAGS = {
-    "python": "\n\n#Python #Coding #Programming #SoftwareEngineering #PythonProgramming #LearnPython #WebDevelopment",
-    "javascript": "\n\n#JavaScript #WebDev #Coding #Programming #Frontend #JS #SoftwareEngineering #ReactJS",
-    "ml": "\n\n#MachineLearning #ArtificialIntelligence #DataScience #Python #ML #DeepLearning #Coding #AI",
-    "security": "\n\n#CyberSecurity #EthicalHacking #BugBounty #InfoSec #PenetrationTesting #Hacking #Security",
-    "interview": "\n\n#InterviewPrep #SoftwareEngineer #CodingInterviews #FAANG #LeetCode #CareerInTech #SystemDesign",
-    "tech_bundle": "\n\n#Coding #Programming #Python #JavaScript #CyberSecurity #MachineLearning #WebDevelopment #SoftwareEngineering",
-    "magazine": "\n\n#TechMagazine #SoftwareArchitecture #Programming #Coding #Python #MachineLearning #WebDev",
-    "tech_news": "\n\n#TechNews #ProgrammingNews #SoftwareEngineering #TechUpdates #DeveloperLife",
-    "thread": "\n\n#CodingThread #DeepDive #SoftwareEngineering #LearnToCode #ProgrammingTips",
-    "poll": "\n\n#CodingQuiz #ProgrammingPoll #Trivia #DeveloperQuiz"
+    "python": "\n\n#Python #LearnPython #PythonProgramming #SoftwareEngineering #CodeSnippet #Developer #CodingTips #PythonProjects",
+    "javascript": "\n\n#JavaScript #TypeScript #WebDevelopment #Frontend #NodeJS #ReactJS #SoftwareEngineering #CodingCommunity",
+    "ml": "\n\n#MachineLearning #ArtificialIntelligence #DataScience #DeepLearning #PythonML #PyTorch #AIEngineering #BigData",
+    "security": "\n\n#CyberSecurity #EthicalHacking #BugBounty #InfoSec #PenetrationTesting #NetworkSecurity #AppSec #Coding",
+    "interview": "\n\n#CodingInterview #FAANG #LeetCode #SystemDesign #SoftwareEngineer #DataStructures #Algorithms #TechCareers",
+    "tech_bundle": "\n\n#SoftwareEngineering #Python #JavaScript #MachineLearning #CyberSecurity #CodingCheatSheet #TechMastery",
+    "magazine": "\n\n#TechMagazine #SoftwareArchitecture #CodeEngineering #ProgrammingDaily #ComputerScience #TechJournal",
+    "tech_news": "\n\n#TechNews #ProgrammingNews #SoftwareEngineering #AIUpdates #DeveloperLife #TechTrends",
+    "thread": "\n\n#TechDeepDive #CodingThread #ComputerScience #SoftwareArchitecture #LearnToCode #DeveloperTips",
+    "poll": "\n\n#CodingQuiz #ProgrammingChallenge #DeveloperTrivia #SoftwareEngineer #TechPoll"
 }

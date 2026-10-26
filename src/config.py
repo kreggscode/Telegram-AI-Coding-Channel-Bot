@@ -16,19 +16,20 @@ AI_MODEL = os.getenv("AI_MODEL", "gemini-fast").strip()
 
 # Secret verification for logs (masked)
 def mask_secret(s):
-    if not s: return "MISSING"
+    if not s:
+        return "MISSING"
     return s[:4] + "*" * (len(s) - 8) + s[-4:] if len(s) > 8 else "****"
 
-print(f"--- CONFIG VERIFICATION ---")
+print("--- CONFIG VERIFICATION ---")
 print(f"BOT_TOKEN: {mask_secret(BOT_TOKEN)}")
-print(f"CHAT_ID: {CHAT_ID}")
+print(f"CHAT_ID: {CHAT_ID if CHAT_ID else 'MISSING'}")
 print(f"POLLINATIONS_API_KEY: {mask_secret(POLLINATIONS_API_KEY)}")
 print(f"AI_MODEL: {AI_MODEL}")
-print(f"---------------------------")
+print("---------------------------")
 
 if not BOT_TOKEN or not CHAT_ID:
-    raise RuntimeError("BOT_TOKEN or CHAT_ID is not set. Check your environment or .env file.")
+    print("WARNING: BOT_TOKEN or CHAT_ID is not configured. Telegram messaging will be simulated/disabled.")
 
 # Course tracking logic (Stateless 'Day X' calculation)
 # We calculate days since this date to show "Day 1", "Day 2", etc.
-COURSE_START_DATE = "2026-02-01" 
+COURSE_START_DATE = "2026-02-01"

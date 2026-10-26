@@ -17,35 +17,6 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret-key")
 
 CURRENT_POST_TYPE = None
 
-# Wrap tg.send_text to automatically append hashtags based on CURRENT_POST_TYPE
-_original_send_text = tg.send_text
-def custom_send_text(text, parse_mode="Markdown"):
-    global CURRENT_POST_TYPE
-    if CURRENT_POST_TYPE and CURRENT_POST_TYPE != "thread":
-        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
-        text = text + tags
-    return _original_send_text(text, parse_mode)
-tg.send_text = custom_send_text
-
-# Wrap tg.send_photo to automatically append hashtags based on CURRENT_POST_TYPE
-_original_send_photo = tg.send_photo
-def custom_send_photo(image_url, caption=""):
-    global CURRENT_POST_TYPE
-    if CURRENT_POST_TYPE:
-        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
-        caption = caption + tags
-    return _original_send_photo(image_url, caption)
-tg.send_photo = custom_send_photo
-
-# Wrap tg.send_document to automatically append hashtags based on CURRENT_POST_TYPE
-_original_send_document = tg.send_document
-def custom_send_document(document_path, caption=""):
-    global CURRENT_POST_TYPE
-    if CURRENT_POST_TYPE:
-        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
-        caption = caption + tags
-    return _original_send_document(document_path, caption)
-tg.send_document = custom_send_document
 
 @app.before_request
 def set_post_type():
@@ -75,8 +46,8 @@ def index():
 
 @app.route("/send/python-tip")
 def send_python_tip():
-    text = ai.generate_text(TEXT_TEMPLATES["python_tip"])
-    tg.send_text(text)
+    text = ai.generate_text(TEXT_TEMPLATES["python_tip"]())
+    tg.send_text(text, post_type="python")
     flash("Python tip sent!", "success")
     return redirect(url_for("index"))
 
@@ -86,24 +57,28 @@ def send_image_post():
     """Rotates between JS, Python, ML images"""
     import random
     choices = [
-        ("js_tip", "js_image"),
-        ("python_tip", "python_image"),
-        ("ml_tip", "ml_image"),
+        ("js_tip", "js_image", "javascript"),
+        ("python_tip", "python_image", "python"),
+        ("ml_tip", "ml_image", "ml"),
     ]
-    text_key, img_key = random.choice(choices)
+    text_key, img_key, p_type = random.choice(choices)
     
-    caption = ai.generate_text(TEXT_TEMPLATES[text_key])
+    caption = ai.generate_text(TEXT_TEMPLATES[text_key]())
     img_url = ai.image_url(IMAGE_TEMPLATES[img_key])
     
-    tg.send_photo(img_url, caption)
-    flash(f"Image sent ({text_key})!", "success")
+    if img_url:
+        tg.send_photo(img_url, caption=caption, post_type=p_type)
+        flash(f"Image sent ({text_key})!", "success")
+    else:
+        tg.send_text(caption, post_type=p_type)
+        flash(f"Tip sent ({text_key}, image disabled)!", "success")
     return redirect(url_for("index"))
 
 
 @app.route("/send/tech-news")
 def send_tech_news():
     text = ai.generate_text(TEXT_TEMPLATES["tech_news"])
-    tg.send_text(text)
+    tg.send_text(text, post_type="tech_news")
     flash("Tech News sent!", "success")
     return redirect(url_for("index"))
 
@@ -130,8 +105,10 @@ def send_thread():
     raw = ai.generate_text(TEXT_TEMPLATES["thread_explainer"])
     parts = [p.strip() for p in raw.split("\n\n") if p.strip()]
     if parts:
-        parts[-1] = parts[-1] + HASHTAGS.get("thread", "")
-        tg.send_thread(parts)
+        for i, part in enumerate(parts):
+            # Attach footer & hashtags to the last part of the thread
+            is_last = (i == len(parts) - 1)
+            tg.send_text(part, add_footer=is_last, post_type="thread" if is_last else None)
         flash("Thread sent!", "success")
     else:
         flash("Thread generation failed.", "error")
@@ -139,4 +116,4 @@ def send_thread():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
