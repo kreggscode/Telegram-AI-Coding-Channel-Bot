@@ -2,38 +2,43 @@ from datetime import datetime, timedelta
 from .config import TIMEZONE_OFFSET_HOURS
 
 
-def get_local_hour_24() -> int:
-    """Return current local hour (0-23) based on TIMEZONE_OFFSET_HOURS."""
+def get_local_now() -> datetime:
+    """Return current local datetime based on TIMEZONE_OFFSET_HOURS."""
     now_utc = datetime.utcnow()
-    local = now_utc + timedelta(hours=TIMEZONE_OFFSET_HOURS)
-    return local.hour
+    return now_utc + timedelta(hours=TIMEZONE_OFFSET_HOURS)
+
+
+def get_local_hour_24() -> int:
+    """Return current local hour (0-23)."""
+    return get_local_now().hour
 
 
 def decide_post_type() -> str:
     """
-    Decide what to post based on hour (IST).
-    
-    Schedule (IST):
-    - 8:10 AM: Daily Technical Magazine
-    - 11:00 AM: Python Mastery
-    - 1:00 PM: LeetCode Problem of the Day (POTD)
-    - 2:00 PM: JavaScript & TypeScript Pro
-    - 6:00 PM: AI & ML Engineering
-    - 9:00 PM: Cyber Security & Bug Bounty
+    High-Signal Publishing Cadence (IST):
+    - Morning (07:00 - 11:00):
+        Sunday -> 'magazine' (Weekly Comprehensive Journal)
+        Mon/Wed/Fri/Sun -> 'ai' (Generative AI & LLM Systems)
+        Tue/Thu/Sat -> 'python' (Advanced Python Backend Architecture)
+    - Midday (11:00 - 16:00):
+        'leetcode' (FAANG LeetCode Problem of the Day)
+    - Evening (16:00 - 23:59):
+        'fullstack' (Modern TypeScript / Fullstack Systems) or 'security'
     """
-    hour = get_local_hour_24()
+    now = get_local_now()
+    hour = now.hour
+    weekday = now.weekday()  # 0=Monday, 6=Sunday
 
-    if 6 <= hour < 10:
-        return "magazine"
-    elif 10 <= hour < 12:
-        return "python"
-    elif 12 <= hour < 14:
+    if 6 <= hour < 11:
+        if weekday == 6:  # Sunday morning magazine
+            return "magazine"
+        elif weekday in (0, 2, 4):  # Mon, Wed, Fri -> AI
+            return "ai"
+        else:  # Tue, Thu, Sat -> Python
+            return "python"
+    elif 11 <= hour < 16:
         return "leetcode"
-    elif 14 <= hour < 16:
-        return "javascript"
-    elif 16 <= hour < 19:
-        return "ml"
-    elif 19 <= hour < 24:
-        return "security"
+    elif 16 <= hour < 24:
+        return "fullstack" if weekday % 2 == 0 else "security"
     else:
-        return "magazine"
+        return "ai"

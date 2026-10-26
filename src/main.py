@@ -147,12 +147,14 @@ def post_technical_bundle():
 def post_single_topic(topic_key: str):
     """Generate and post a single technical topic with code copy button, interactive quiz, and cheat sheet."""
     topic_map = {
+        "ai": ("AI & LLM Engineering", TEXT_TEMPLATES["ai_tip"]),
         "python": ("Python Mastery", TEXT_TEMPLATES["python_tip"]),
         "leetcode": ("LeetCode Problem of the Day", TEXT_TEMPLATES["leetcode_tip"]),
-        "javascript": ("JS Pro", TEXT_TEMPLATES["js_tip"]),
-        "ml": ("ML Engineering", TEXT_TEMPLATES["ml_tip"]),
-        "security": ("Cyber Security", TEXT_TEMPLATES["security_tip"]),
-        "interview": ("FAANG Interview Prep", TEXT_TEMPLATES["interview_tip"])
+        "fullstack": ("Modern Fullstack & TS Pro", TEXT_TEMPLATES["fullstack_tip"]),
+        "security": ("Cyber Security & Bug Bounty", TEXT_TEMPLATES["security_tip"]),
+        "interview": ("FAANG Interview Prep", TEXT_TEMPLATES["interview_tip"]),
+        "javascript": ("JS & TS Pro", TEXT_TEMPLATES["fullstack_tip"]),
+        "ml": ("AI & ML Engineering", TEXT_TEMPLATES["ai_tip"])
     }
     
     if topic_key not in topic_map:
@@ -237,7 +239,7 @@ def main():
 
     if post_type == "magazine":
         post_daily_magazine()
-    elif post_type in ["python", "leetcode", "javascript", "ml", "security", "interview"]:
+    elif post_type in ["ai", "python", "leetcode", "fullstack", "security", "interview", "javascript", "ml"]:
         post_single_topic(post_type)
     elif post_type == "tech_bundle":
         post_technical_bundle()

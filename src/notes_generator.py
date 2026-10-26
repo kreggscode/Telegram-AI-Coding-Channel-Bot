@@ -24,8 +24,10 @@ class ModernNotesPDF(FPDF):
         self.full_date = datetime.now().strftime("%B %d, %Y")
 
         self.type_labels = {
+            "ai": "GENERATIVE AI & LLM SYSTEMS",
             "python": "PYTHON MASTERY",
             "leetcode": "LEETCODE PROBLEM OF THE DAY",
+            "fullstack": "MODERN FULLSTACK & TS PRO",
             "javascript": "JAVASCRIPT & TS PRO",
             "ml": "AI / ML ENGINEERING",
             "security": "CYBER SECURITY & BUG BOUNTY",
@@ -33,8 +35,10 @@ class ModernNotesPDF(FPDF):
             "magazine": "TECHNICAL JOURNAL",
         }
         self.track_colors = {
+            "ai": (106, 27, 154),        # AI Purple / Violet
             "python": (15, 76, 129),     # Deep Python Blue
             "leetcode": (220, 110, 40),   # LeetCode Orange
+            "fullstack": (195, 140, 20), # JS Warm Gold
             "javascript": (195, 140, 20), # JS Warm Gold
             "ml": (114, 9, 183),         # AI Purple
             "security": (180, 35, 40),    # Cyber Red
