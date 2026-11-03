@@ -11,8 +11,8 @@ POLLINATIONS_API_KEY = os.getenv("POLLINATIONS_API_KEY", "").strip()
 TIMEZONE_OFFSET_HOURS = float(os.getenv("TIMEZONE_OFFSET_HOURS", "5.5") or "5.5")
 
 # Default AI Model for better performance
-# Options: gemini-fast, openai, qwen-coder, gemini-large, claude, mistral, deepseek
-AI_MODEL = os.getenv("AI_MODEL", "gemini-fast").strip()
+# Options: openai/gpt-5.4-nano, openai, qwen-coder, gemini-large, claude, mistral, deepseek
+AI_MODEL = os.getenv("AI_MODEL", "openai/gpt-5.4-nano").strip()
 
 # Secret verification for logs (masked)
 def mask_secret(s):
